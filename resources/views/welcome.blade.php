@@ -81,7 +81,7 @@
 
             <div class="content">
                 <div class="title m-b-md">
-                    Sistema Gestión De Inventario
+                    Sistema Gestión De Inventario prueba
                 </div>
             </div>
         </div>
