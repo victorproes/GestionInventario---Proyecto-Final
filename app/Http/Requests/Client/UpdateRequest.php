@@ -25,11 +25,11 @@ class UpdateRequest extends FormRequest
     {
         return [
             'name' => 'string|required|max:255',
-            'dni' => 'string|required|unique:clients,dni,'.$this->route('client')->id.'|max:8',
-            'cif' => 'string|required|unique:clients,cif,'.$this->route('client')->id.'|max:9',
-            'address' => 'string|required|max:255',
-            'phone' => 'string|required|unique:clients,phone,'.$this->route('client')->id.'|max:9',
-            'email' => 'string|required|unique:clients,email,'.$this->route('client')->id.'|max:255|email:rfc,dns'
+            'dni' => 'string|required|unique:clients,dni,'.$this->route('client')->id.'|max:9|min:9',
+            'cif' => 'string|nullable|unique:clients,cif,'.$this->route('client')->id.'|max:9',
+            'address' => 'string|nullable|max:255',
+            'phone' => 'string|nullable|unique:clients,phone,'.$this->route('client')->id.'|max:9',
+            'email' => 'string|nullable|unique:clients,email,'.$this->route('client')->id.'|max:255|email:rfc,dns'
         ];
     }
 
@@ -43,8 +43,8 @@ class UpdateRequest extends FormRequest
             'dni.required' => 'Este campo es requerido.',
             'dni.string' => 'El valor no es correcto.',
             'dni.unique' => 'Este DNI ya se encuentra registrado.',
-            'dni.min' => 'Se requiere de 8 caracteres.',
-            'dni.max' => 'Solo se permiten 8 caracteres.',
+            'dni.min' => 'Se requiere de 9 caracteres.',
+            'dni.max' => 'Solo se permiten 9 caracteres.',
 
             'cif.unique' => 'Este cif ya se encuentra registrado.',
             'cif.string' => 'El valor no es correcto.',

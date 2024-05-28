@@ -6,10 +6,28 @@ use App\Purchase;
 use Illuminate\Http\Request;
 use App\Http\Requests\Purchase\StoreRequest;
 use App\Http\Requests\Purchase\UpdateRequest;
+use App\Product;
 use App\Provider;
-
+use Carbon\Carbon;
+use Illuminate\Support\Facades\Auth;
+use Barryvdh\DomPDF\Facade\Pdf;
 class PurchaseController extends Controller
 {
+
+    public function __construct()
+    {
+        $this->middleware('auth');
+        $this->middleware('can:purchases.create')->only(['create','store']);
+        $this->middleware('can:purchases.index')->only(['index']);
+        $this->middleware('can:purchases.show')->only(['show']);
+        $this->middleware('can:change.status.purchases')->only(['change_status']);
+        $this->middleware('can:purchases.pdf')->only(['pdf']);
+        $this->middleware('can:upload.purchases')->only(['upload']);
+        
+       
+    }
+
+    
     public function index()
     {
         $purchases = Purchase::get();
@@ -20,47 +38,77 @@ class PurchaseController extends Controller
     public function create()
     {
         $providers = Provider::get();
-        return view('admin.purchase.create', compact('providers'));
+        $products=Product::where('status','ACTIVE')->get();
+        return view('admin.purchase.create', compact('providers','products'));
     }
 
 
     public function store(StoreRequest $request)
-    {
-        $purchase = Purchase::create($request->all());
+{
+    
+    $purchase = Purchase::create($request->all() + [
+        'user_id' => Auth::user()->id,
+        'purchase_date' => Carbon::now('Europe/Madrid'),
+    ]);
 
-        foreach ($request->product_id as $key => $product) {
-            $results[] = array("product_id" => $request->product_id[$key], 
-            "quantity" => $request->quantity[$key], "price" => $request->price[$key]);
-        }
-        $purchase->purchaseDetails()->createMany($results);
-
-        return redirect()->route('purchases.index');
+    foreach ($request->product_id as $key => $product) {
+        $results[] = array(
+            "product_id" => $request->product_id[$key], 
+            "quantity" => $request->quantity[$key], 
+            "price" => $request->price[$key],
+            
+        );
     }
+   
+    $purchase->purchaseDetails()->createMany($results);
+
+    return redirect()->route('purchases.index');
+}
+
 
 
     public function show(Purchase $purchase)
     {
-        return view('admin.purchase.show', compact('purchase'));
+       
+        $subtotal=0;
+        $purchaseDetails=$purchase->purchaseDetails;
+        foreach ($purchaseDetails as $purchaseDetail) {
+            $subtotal+=$purchaseDetail->quantity*$purchaseDetail->price;
+        }
+        return view('admin.purchase.show', compact('purchase','subtotal','purchaseDetails'));
     }
 
 
-    public function edit(Purchase $purchase)
+
+
+
+    public function pdf(Purchase $purchase)
     {
-        $providers = Provider::get();
-        return view('admin.purchase.show', compact('purchase'));
+        $subtotal=0;
+        $purchaseDetails=$purchase->purchaseDetails;
+        foreach ($purchaseDetails as $purchaseDetail) {
+            $subtotal+=$purchaseDetail->quantity*$purchaseDetail->price;
+        }
+
+        $pdf = Pdf::loadView('admin.purchase.pdf', compact('purchase','subtotal','purchaseDetails'));
+        return $pdf->download('Reporte_de_compra_'.$purchase->id.'.pdf');
     }
 
 
-    public function update(UpdateRequest $request, Purchase $purchase)
+    public function upload(Request $request, Purchase $purchase)
     {
-        // $purchase->update($request->all());
-        // return redirect()->route('purchases.index');
+        $purchase->update($request->all());
+        return redirect()->route('purchases.index');
     }
 
-
-    public function destroy(Purchase $purchase)
+    public function change_status(Purchase $purchase)
     {
-        // $purchase->delete();
-        // return redirect()->route('purchases.index');
+        if ($purchase->status=='VALID') {
+            $purchase->update(['status'=>'CANCELED']);
+            return redirect()->back();
+        }else {
+            $purchase->update(['status'=>'VALID']);
+            return redirect()->back();
+        }
     }
 }

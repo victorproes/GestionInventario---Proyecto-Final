@@ -9,6 +9,17 @@ use App\Http\Requests\Category\UpdateRequest;
 class CategoryController extends Controller
 {
    
+    public function __construct()
+    {
+        $this->middleware('auth');
+        $this->middleware('can:categories.create')->only(['create','store']);
+        $this->middleware('can:categories.index')->only(['index']);
+        $this->middleware('can:categories.edit')->only(['edit','update']);
+        $this->middleware('can:categories.show')->only(['show']);
+        $this->middleware('can:categories.destroy')->only(['destroy']);
+    }
+
+
     public function index()
     {
         $categories=Category::get();
@@ -45,14 +56,24 @@ class CategoryController extends Controller
   
     public function update (UpdateRequest $request, Category $category)
     {
-        $category->update($request->all());
-        return redirect()->route('categories.index');
+
+        
+            $category->update($request->all());
+            return redirect()->route('categories.edit',$category->id)->with('success', 'Categoría actualizada correctamente.');
+     
+
     }
 
   
     public function destroy(Category $category)
     {
-        $category->delete();
-        return redirect()->route('categories.index');
+        try {
+            $category->delete();
+            return redirect()->route('categories.index')->with('success', 'Categoría eliminada correctamente.');
+        } catch (\Illuminate\Database\QueryException $e) {
+            
+            return redirect()->route('categories.index')->with('error', 'No se puede eliminar la categoría porque tiene productos asociados.');
+        }
     }
+    
 }

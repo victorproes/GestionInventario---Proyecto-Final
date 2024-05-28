@@ -7,9 +7,31 @@ use App\Sale;
 use Illuminate\Http\Request;
 use App\Http\Requests\Sale\StoreRequest;
 use App\Http\Requests\Sale\UpdateRequest;
+use App\Product;
+use Carbon\Carbon;
+use Illuminate\Support\Facades\Auth;
+use Barryvdh\DomPDF\Facade\Pdf;
+use Mike42\Escpos\PrintConnectors\FilePrintConnector;
+use Mike42\Escpos\PrintConnectors\WindowsPrintConnector;
+use Mike42\Escpos\Printer;
+use Mike42\Escpos\EscposImage;
 
 class SaleController extends Controller
 {
+
+    public function __construct()
+    {
+        $this->middleware('auth');
+        $this->middleware('can:sales.create')->only(['create','store']);
+        $this->middleware('can:sales.index')->only(['index']);
+        $this->middleware('can:sales.show')->only(['show']);
+        $this->middleware('can:change.status.sales')->only(['change_status']);
+        $this->middleware('can:sales.pdf')->only(['pdf']);
+        $this->middleware('can:sales.print')->only(['print']);
+        
+       
+    }
+
     public function index()
     {
         $sales = Sale::get();
@@ -20,13 +42,17 @@ class SaleController extends Controller
     public function create()
     {
         $clients = Client::get();
-        return view('admin.sale.create', compact('clients'));
+        $products = Product::get();
+        return view('admin.sale.create', compact('clients', 'products'));
     }
 
 
     public function store(StoreRequest $request)
     {
-        $sale = Sale::create($request->all());
+        $sale = Sale::create($request->all() + [
+            'user_id' => Auth::user()->id,
+            'sale_date' => Carbon::now('Europe/Madrid'),
+        ]);
 
         foreach ($request->product_id as $key => $product) {
             $results[] = array(
@@ -43,27 +69,63 @@ class SaleController extends Controller
 
     public function show(Sale $sale)
     {
-        return view('admin.sale.show', compact('sale'));
+
+        $subtotal = 0;
+        $saleDetails = $sale->saleDetails;
+        foreach ($saleDetails as $saleDetail) {
+            $subtotal += $saleDetail->quantity * $saleDetail->price - ($saleDetail->quantity * $saleDetail->price * $saleDetail->discount / 100);
+        }
+        return view('admin.sale.show', compact('sale', 'saleDetails', 'subtotal'));
     }
 
 
-    public function edit(Sale $sale)
+
+    public function pdf(Sale $sale)
     {
-        $clients = Client::get();
-        return view('admin.sale.show', compact('sale'));
+        $subtotal = 0;
+        $saleDetails = $sale->saleDetails;
+        foreach ($saleDetails as $saleDetail) {
+            $subtotal += $saleDetail->quantity * $saleDetail->price - ($saleDetail->quantity * $saleDetail->price * $saleDetail->discount / 100);
+        }
+        $pdf = Pdf::loadView('admin.sale.pdf', compact('sale', 'subtotal', 'saleDetails'));
+        return $pdf->download('Reporte_de_venta_' . $sale->id . '.pdf');
     }
 
-
-    public function update(UpdateRequest $request, Sale $sale)
+    public function print(Sale $sale)
     {
-        // $sale->update($request->all());
-        // return redirect()->route('sales.index');
+
+        try {
+            $subtotal = 0;
+            $saleDetails = $sale->saleDetails;
+            foreach ($saleDetails as $saleDetail) {
+                $subtotal += $saleDetail->quantity * $saleDetail->price - ($saleDetail->quantity * $saleDetail->price * $saleDetail->discount / 100);
+            }
+
+            $printer_name="TM20";
+            $connector=new WindowsPrintConnector($printer_name);
+            $printer=new Printer($connector);
+
+            $printer->text("$9,95\n");
+
+            $printer->cut();
+            $printer->close();
+
+
+
+            return redirect()->back();
+        } catch (\Throwable $th) {
+           return redirect()->back();
+        }
     }
 
-
-    public function destroy(Sale $sale)
+    public function change_status(Sale $sale)
     {
-        // $sale->delete();
-        // return redirect()->route('sales.index');
+        if ($sale->status=='VALID') {
+            $sale->update(['status'=>'CANCELED']);
+            return redirect()->back();
+        }else {
+            $sale->update(['status'=>'VALID']);
+            return redirect()->back();
+        }
     }
 }

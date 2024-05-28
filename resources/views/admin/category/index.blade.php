@@ -3,13 +3,13 @@
 @section('title', 'Gestión de categorías')
 
 @section('styles')
-<style type="text/css">
-    .unstyled-button{
-        border: none;
-        padding: 0;
-        background: none;
-    }
-</style>
+    <style type="text/css">
+        .unstyled-button {
+            border: none;
+            padding: 0;
+            background: none;
+        }
+    </style>
 @endsection
 
 @section('options')
@@ -43,8 +43,7 @@
                                 </a>
                                 <div class="dropdown-menu dropdown-menu-right">
                                     <a class="dropdown-item" href="{{ route('categories.create') }}">Agregar</a>
-                                    <button class="dropdown-item" type="button">Another action</button>
-                                    <button class="dropdown-item" type="button">Something else here</button>
+
                                 </div>
                             </div>
                         </div>
@@ -58,20 +57,44 @@
                                         <th>Acciones</th>
                                     </tr>
                                 </thead>
+                                @if (session('success'))
+                                    <div class="alert alert-success">
+                                        {{ session('success') }}
+                                    </div>
+                                @endif
+
+                                @if (session('error'))
+                                    <div class="alert alert-danger">
+                                        {{ session('error') }}
+                                    </div>
+                                @endif
+
                                 <tbody>
                                     @foreach ($categories as $category)
                                         <tr>
                                             <th scope="row">{{ $category->id }}</th>
-                                            <td><a href="{{ route('categories.show', $category) }}">{{ $category->name }}</a></td>
+                                            <td><a
+                                                    href="{{ route('categories.show', $category) }}">{{ $category->name }}</a>
+                                            </td>
                                             <td>{{ $category->description }}</td>
                                             <td style="width:50px;">
-                                                <td style="width:50px;">
-                                                    {!! Form::open(['route' => ['categories.destroy', $category], 'method' => 'DELETE']) !!}
-                                                    <a class="jsgrid-button jsgrid-edit-button" href="{{ route('categories.edit', $category) }}" title="Editar"><i class="far fa-edit"></i></a>
-                                                    <button type="submit" class="jsgrid-button jsgrid-delete-button unstyled-button" title="Eliminar"><i class="far fa-trash-alt"></i></button>
-                                                    {!! Form::close() !!}
-                                                </td>
-                                                
+                                            <td style="width:50px;">
+                                                {!! Form::open([
+                                                    'route' => ['categories.destroy', $category],
+                                                    'method' => 'DELETE',
+                                                    'id' => 'delete-form-' . $category->id,
+                                                ]) !!}
+                                                <a class="jsgrid-button jsgrid-edit-button"
+                                                    href="{{ route('categories.edit', $category) }}" title="Editar"><i
+                                                        class="far fa-edit"></i></a>
+                                                <button type="button"
+                                                    class="jsgrid-button jsgrid-delete-button unstyled-button"
+                                                    onclick="confirmDelete({{ $category->id }})" title="Eliminar"><i
+                                                        class="far fa-trash-alt"></i></button>
+                                                {!! Form::close() !!}
+                                            </td>
+
+
                                             </td>
                                         </tr>
                                     @endforeach
@@ -87,4 +110,25 @@
 
 @section('scripts')
     {!! Html::script('melody/js/data-table.js') !!}
+    {!! Html::script('melody/js/sweetalert2@11') !!}
+    <script>
+        function confirmDelete(categoryId) {
+            console.log(categoryId);
+            Swal.fire({
+                title: '¿Estás seguro?',
+                text: "¡No podrás revertir esto!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Sí, eliminarlo!',
+                cancelButtonText: 'Cancelar'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    // Si el usuario confirma, enviar el formulario de eliminación
+                    document.getElementById('delete-form-' + categoryId).submit();
+                }
+            });
+        }
+    </script>
 @endsection

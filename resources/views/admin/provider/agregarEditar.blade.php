@@ -1,6 +1,6 @@
 @extends('layouts.admin')
 
-@section('title','Agregar Proveedor')
+@section('title', 'Agregar Proveedor')
 
 @section('styles')
 @endsection
@@ -29,17 +29,6 @@
             <div class="col-lg-12 grid-margin stretch-card">
                 <div class="card">
                     <div class="card-body">
-                        <!-- Mostrar errores de validación -->
-                        @if ($errors->any())
-                            <div class="alert alert-danger">
-                                <ul>
-                                    @foreach ($errors->all() as $error)
-                                        <li>{{ $error }}</li>
-                                    @endforeach
-                                </ul>
-                            </div>
-                        @endif
-
                         <form id="agregarEditarProviderForm"
                             action="{{ isset($provider) ? route('providers.update', $provider) : route('providers.store') }}"
                             method="POST">
@@ -53,7 +42,7 @@
                                 <input type="text" class="form-control" id="name" name="name"
                                     value="{{ old('name', isset($provider) ? $provider->name : '') }}" required>
                                 @error('name')
-                                    <div class="text-danger">{{ $message }}</div>
+                                    <div id="name-error" class="text-danger">{{ $message }}</div>
                                 @enderror
                             </div>
 
@@ -62,7 +51,7 @@
                                 <input type="email" class="form-control" id="email" name="email"
                                     value="{{ old('email', isset($provider) ? $provider->email : '') }}" required>
                                 @error('email')
-                                    <div class="text-danger">{{ $message }}</div>
+                                    <div id="email-error" class="text-danger">{{ $message }}</div>
                                 @enderror
                             </div>
 
@@ -71,7 +60,7 @@
                                 <input type="text" class="form-control" id="cif" name="cif"
                                     value="{{ old('cif', isset($provider) ? $provider->cif : '') }}" required>
                                 @error('cif')
-                                    <div class="text-danger">{{ $message }}</div>
+                                    <div id="cif-error" class="text-danger">{{ $message }}</div>
                                 @enderror
                             </div>
 
@@ -80,7 +69,7 @@
                                 <input type="text" class="form-control" id="address" name="address"
                                     value="{{ old('address', isset($provider) ? $provider->address : '') }}" required>
                                 @error('address')
-                                    <div class="text-danger">{{ $message }}</div>
+                                    <div id="address-error" class="text-danger">{{ $message }}</div>
                                 @enderror
                             </div>
 
@@ -89,7 +78,7 @@
                                 <input type="text" class="form-control" id="phone" name="phone"
                                     value="{{ old('phone', isset($provider) ? $provider->phone : '') }}" required>
                                 @error('phone')
-                                    <div class="text-danger">{{ $message }}</div>
+                                    <div id="phone-error" class="text-danger">{{ $message }}</div>
                                 @enderror
                             </div>
 
@@ -107,4 +96,32 @@
 
 @section('scripts')
     {!! Html::script('melody/js/data-table.js') !!}
+    <script>
+        setTimeout(function() {
+            var nameError = document.getElementById('name-error');
+            if (nameError) {
+                nameError.style.display = 'none';
+            }
+
+            var emailError = document.getElementById('email-error');
+            if (emailError) {
+                emailError.style.display = 'none';
+            }
+
+            var cifError = document.getElementById('cif-error');
+            if (cifError) {
+                cifError.style.display = 'none';
+            }
+
+            var addressError = document.getElementById('address-error');
+            if (addressError) {
+                addressError.style.display = 'none';
+            }
+
+            var phoneError = document.getElementById('phone-error');
+            if (phoneError) {
+                phoneError.style.display = 'none';
+            }
+        }, 3000);
+    </script>
 @endsection

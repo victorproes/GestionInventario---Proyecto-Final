@@ -19,7 +19,7 @@
             </h3>
             <nav aria-label="breadcrumb">
                 <ol class="breadcrumb">
-                    <li class="breadcrumb-item"><a href="{{route('categories.index')}}">Panel de Administrador</a></li>
+                    <li class="breadcrumb-item"><a href="{{ route('categories.index') }}">Panel de Administrador</a></li>
                     <li class="breadcrumb-item active" aria-current="page">
                         {{ isset($category) ? 'Editar categoría' : 'Agregar categoría' }}</li>
                 </ol>
@@ -36,21 +36,36 @@
                             @if (isset($category))
                                 @method('PUT')
                             @endif
+                            @if (session('success'))
+                                <div class="alert alert-success">
+                                    {{ session('success') }}
+                                </div>
+                            @endif
 
+                            @if (session('error'))
+                                <div class="alert alert-danger">
+                                    {{ session('error') }}
+                                </div>
+                            @endif
                             <div class="form-group">
                                 <label for="name">Nombre:</label>
                                 <input type="text" class="form-control" id="name" name="name"
                                     value="{{ isset($category) ? $category->name : '' }}" required>
+                                @error('name')
+                                    <div id="name-error" class="text-danger">{{ $message }}</div>
+                                @enderror
                             </div>
                             <div class="form-group">
                                 <label for="description">Descripción:</label>
                                 <textarea class="form-control" id="description" name="description" rows="3">{{ isset($category) ? $category->description : '' }}</textarea>
+                                @error('description')
+                                    <div id="description-error" class="text-danger">{{ $message }}</div>
+                                @enderror
                             </div>
                             <button type="submit"
                                 class="btn btn-primary">{{ isset($category) ? 'Editar' : 'Agregar' }}</button>
                             <a class="btn btn-danger" href="{{ route('categories.index') }}">Volver</a>
                         </form>
-
                     </div>
                 </div>
             </div>
@@ -60,4 +75,11 @@
 
 @section('scripts')
     {!! Html::script('melody/js/data-table.js') !!}
+    <script>
+        // Ocultar automáticamente los mensajes de error después de 3 segundos
+        setTimeout(function() {
+            document.getElementById('name-error').style.display = 'none';
+            document.getElementById('description-error').style.display = 'none';
+        }, 3000);
+    </script>
 @endsection

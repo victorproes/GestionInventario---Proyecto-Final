@@ -3,6 +3,7 @@
 namespace App\Http\Requests\Product;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class UpdateRequest extends FormRequest
 {
@@ -24,43 +25,26 @@ class UpdateRequest extends FormRequest
     public function rules()
     {
         return [
-            'name'=>'string|required|unique:products,name,'.$this->route('provider')->id.'|max:255',
-
-            'cif'=>'required|string|min:9|unique:providers,cif,'.$this->route('provider')->id.'|max:9',
-             'image'=>'required|dimensions:min_width=100,min_height=200',
-             'sell_price'=>'required',
-             'category_id'=>'integer|required|exists:App\Category,id',
-             'provider_id'=>'integer|required|exists:App\Provider,id',
-
-            'name'=>'required|string|max:50',
-            'description'=>'nullable|string|max:255',
+            'name' => [
+                'required',
+                'string',
+                'max:255',
+                Rule::unique('products')->ignore($this->product),
+            ],
+            'sell_price' => 'required',
+            'image' => 'image|mimes:jpeg,png,jpg,gif|max:2048',
         ];
     }
 
-    public function messages(){
-        return[
-            'name.required'=>'Este campo es requerido.',
-            'name.string'=>'El valor no es correcto.',
-            'name.max'=>'Solo se permiten 255 caracteres.',
-
-            'image.required'=>'Este campo es requerido.',
-            'image.dimensions'=>'Solo se permiten imágenes de 100x200 px.',
-
-            'sell_price.required'=>'Este campo es requerido',
-
-            'category_id.required'=>'Este campo es requerido.',
-            'category_id.integer'=>'El valor tiene que ser entero.',
-            'category_id.exists'=>'La categoría no existe.',
-
-            'provider_id.required'=>'Este campo es requerido.',
-            'provider_id.integer'=>'El valor tiene que ser entero.',
-            'provider_id.exists'=>'El proveedor no existe.',
-
-
-
-
-            
-            
+    public function messages()
+    {
+        return [
+            'name.required' => 'Este campo es requerido.',
+            'name.string' => 'El valor no es correcto.',
+            'name.max' => 'Solo se permiten 255 caracteres.',
+            'name.unique' => 'Este nombre ya se encuentra registrado',
+            'image.image' => 'El formato debe ser una imagen',
+            'image.max' => 'El tamaño máximo de la imagen es de 2mb',
         ];
     }
 }

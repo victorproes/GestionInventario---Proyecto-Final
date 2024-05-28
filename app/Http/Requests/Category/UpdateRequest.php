@@ -15,12 +15,24 @@ class UpdateRequest extends FormRequest
     {
         return true;
     }
+    public function rules()
+    {
+        return [
+            'name' => 'required|string|max:50|unique:categories,name,' . $this->route('category')->id,
+            'description' => 'nullable|string|max:255',
+        ];
+    }
 
-    /**
-     * Get the validation rules that apply to the request.
-     *
-     * @return array
-     */
+    public function messages(){
+        return[
+            'name.required' => 'Este campo es requerido.',
+            'name.string' => 'El valor no es correcto.',
+            'name.max' => 'Solo se permiten 50 caracteres.',
+            'name.unique' => 'El nombre de la categoría ya está en uso.',
+            'description.string' => 'El valor no es correcto.',
+            
+        ];
+    }
    
 
    

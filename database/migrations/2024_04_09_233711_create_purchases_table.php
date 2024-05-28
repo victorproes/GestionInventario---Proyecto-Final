@@ -21,10 +21,10 @@ class CreatePurchasesTable extends Migration
             $table->unsignedBigInteger('user_id');
             $table->foreign('user_id')->references('id')->on('users');
             $table->dateTime('purchase_date');
-            $table->decimal('iva');
-            $table->decimal('total');
+            $table->decimal('iva',5,2);
+            $table->decimal('total',15,2);
             $table->enum('status',['VALID','CANCELED'])->default('VALID');
-            $table->string('picture');
+            $table->string('picture')->nullable();
             
             $table->timestamps();
         });
