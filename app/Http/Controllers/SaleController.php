@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Client;
+use App\Events\ProductSold;
 use App\Sale;
 use Illuminate\Http\Request;
 use App\Http\Requests\Sale\StoreRequest;
@@ -60,6 +61,7 @@ class SaleController extends Controller
                 "quantity" => $request->quantity[$key], "price" => $request->price[$key],
                 "discount" => $request->discount[$key]
             );
+            event(new ProductSold($request->product_id[$key], $request->quantity[$key]));
         }
         $sale->saleDetails()->createMany($results);
 
@@ -120,12 +122,22 @@ class SaleController extends Controller
 
     public function change_status(Sale $sale)
     {
-        if ($sale->status=='VALID') {
-            $sale->update(['status'=>'CANCELED']);
-            return redirect()->back();
-        }else {
-            $sale->update(['status'=>'VALID']);
-            return redirect()->back();
+        foreach ($sale->saleDetails as $detail) {
+            $product = Product::find($detail->product_id);
+            $quantityChange = $detail->quantity;
+
+            if ($sale->status == 'VALID') {
+                event(new ProductSold($detail->product_id, $detail->quantity, true)); // Cancelar
+                $sale->update(['status' => 'CANCELED']);
+            } else {
+                if ($product->stock - $quantityChange < 0) {
+                    return redirect()->back()->withErrors(['error' => 'No se puede reactivar la venta porque resultará en un stock negativo.']);
+                }
+                event(new ProductSold($detail->product_id, $detail->quantity)); // Reactivar
+                $sale->update(['status' => 'VALID']);
+            }
         }
+
+        return redirect()->back();
     }
 }

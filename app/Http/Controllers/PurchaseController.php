@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\ProductPurchased;
 use App\Purchase;
 use Illuminate\Http\Request;
 use App\Http\Requests\Purchase\StoreRequest;
@@ -58,6 +59,8 @@ class PurchaseController extends Controller
             "price" => $request->price[$key],
             
         );
+        // Disparar el evento para actualizar el stock
+        event(new ProductPurchased($request->product_id[$key], $request->quantity[$key]));
     }
    
     $purchase->purchaseDetails()->createMany($results);
@@ -103,12 +106,22 @@ class PurchaseController extends Controller
 
     public function change_status(Purchase $purchase)
     {
-        if ($purchase->status=='VALID') {
-            $purchase->update(['status'=>'CANCELED']);
-            return redirect()->back();
-        }else {
-            $purchase->update(['status'=>'VALID']);
-            return redirect()->back();
+        foreach ($purchase->purchaseDetails as $detail) {
+            $product = Product::find($detail->product_id);
+            $quantityChange = $detail->quantity;
+            
+            if ($purchase->status == 'VALID') {
+                if ($product->stock - $quantityChange < 0) {
+                    return redirect()->back()->withErrors(['error' => 'No se puede cancelar la compra porque resultará en un stock negativo.']);
+                }
+                event(new ProductPurchased($detail->product_id, $detail->quantity, true)); // Cancelar
+                $purchase->update(['status' => 'CANCELED']);
+            } else {
+                event(new ProductPurchased($detail->product_id, $detail->quantity)); // Reactivar
+                $purchase->update(['status' => 'VALID']);
+            }
         }
+
+        return redirect()->back();
     }
 }
