@@ -3,13 +3,13 @@
 @section('title', 'Gestión de clientes')
 
 @section('styles')
-<style type="text/css">
-    .unstyled-button{
-        border: none;
-        padding: 0;
-        background: none;
-    }
-</style>
+    <style type="text/css">
+        .unstyled-button {
+            border: none;
+            padding: 0;
+            background: none;
+        }
+    </style>
 @endsection
 
 @section('options')
@@ -37,13 +37,10 @@
                     <div class="card-body">
                         <div class="d-flex justify-content-between">
                             <h4 class="card-title">Clientes</h4>
-                            <div class="btn-group">
-                                <a type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                    <i class="fas fa-ellipsis-v"></i>
-                                </a>
-                                <div class="dropdown-menu dropdown-menu-right">
-                                    <a class="dropdown-item" href="{{ route('clients.create') }}">Agregar</a>
-                                    
+                            <div class="col-lg-6">
+                                <div class="text-lg-right mb-4">
+                                    <a href="{{ route('clients.create') }}" class="btn btn-primary"><i
+                                            class="fas fa-plus"></i> Agregar Cliente</a>
                                 </div>
                             </div>
                         </div>
@@ -53,31 +50,46 @@
                                     <tr>
                                         <th>Id</th>
                                         <th>Nombre</th>
-                                        <th>DNI</th>
+                                        <th>Dni</th>
                                         <th>Teléfono</th>
-                                        <th>Correo electrónico</th>
+                                        <th>Correo electronico</th>
                                         <th>Acciones</th>
                                     </tr>
                                 </thead>
+                                @if (session('success'))
+                                    <div class="alert alert-success">
+                                        {{ session('success') }}
+                                    </div>
+                                @endif
+                                @if (session('error'))
+                                    <div class="alert alert-danger">
+                                        {{ session('error') }}
+                                    </div>
+                                @endif
                                 <tbody>
                                     @foreach ($clients as $client)
                                         <tr>
                                             <th scope="row">{{ $client->id }}</th>
-                                            <td><a href="{{ route('clients.show', $client) }}">{{ $client->name }}</a></td>
+                                            <td><a
+                                                    href="{{ route('clients.show', $client) }}">{{ $client->name }}</a>
+                                            </td>
                                             <td>{{ $client->dni }}</td>
                                             <td>{{ $client->phone }}</td>
                                             <td>{{ $client->email }}</td>
-                                    
-                                            
                                             <td style="width:50px;">
-                                                <td style="width:50px;">
-                                                    {!! Form::open(['route' => ['clients.destroy', $client], 'method' => 'DELETE', 'id' => 'delete-form-' . $client->id]) !!}
-                                                    <a class="jsgrid-button jsgrid-edit-button" href="{{ route('clients.edit', $client) }}" title="Editar"><i class="far fa-edit"></i></a>
-                                                    <button type="button" class="jsgrid-button jsgrid-delete-button unstyled-button" onclick="confirmDelete({{ $client->id }})" title="Eliminar"><i class="far fa-trash-alt"></i></button>
-                                                    {!! Form::close() !!}
-                                                </td>
-                                                
-                                                
+                                                {!! Form::open([
+                                                    'route' => ['clients.destroy', $client],
+                                                    'method' => 'DELETE',
+                                                    'id' => 'delete-form-' . $client->id,
+                                                ]) !!}
+                                                <a class="jsgrid-button jsgrid-edit-button"
+                                                    href="{{ route('clients.edit', $client) }}" title="Editar"><i
+                                                        class="far fa-edit"></i></a>
+                                                <button type="button"
+                                                    class="jsgrid-button jsgrid-delete-button unstyled-button"
+                                                    onclick="confirmDelete({{ $client->id }})" title="Eliminar"><i
+                                                        class="far fa-trash-alt"></i></button>
+                                                {!! Form::close() !!}
                                             </td>
                                         </tr>
                                     @endforeach
@@ -96,7 +108,7 @@
     {!! Html::script('melody/js/sweetalert2@11') !!}
     <script>
         function confirmDelete(categoryId) {
-            console.log(categoryId  );
+            console.log(categoryId);
             Swal.fire({
                 title: '¿Estás seguro?',
                 text: "¡No podrás revertir esto!",
@@ -112,5 +124,12 @@
                 }
             });
         }
+
+        // Ocultar automáticamente los mensajes de éxito y error después de 3 segundos
+        setTimeout(function() {
+            document.querySelectorAll('.alert').forEach(function(alert) {
+                alert.style.display = 'none';
+            });
+        }, 3000);
     </script>
 @endsection

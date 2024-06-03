@@ -3,13 +3,13 @@
 @section('title', 'Reporte por rango de fechas')
 
 @section('styles')
-<style type="text/css">
-    .unstyled-button {
-        border: none;
-        padding: 0;
-        background: none;
-    }
-</style>
+    <style type="text/css">
+        .unstyled-button {
+            border: none;
+            padding: 0;
+            background: none;
+        }
+    </style>
 @endsection
 
 @section('options')
@@ -38,19 +38,32 @@
                         <div class="d-flex justify-content-between">
                             {{-- <h4 class="card-title">Reporte por rango de fechas</h4> --}}
                         </div>
+
                         {!! Form::open(['route' => 'report.results', 'method' => 'POST']) !!}
+                        @if (session('success'))
+                            <div class="alert alert-success">
+                                {{ session('success') }}
+                            </div>
+                        @endif
+                        @if (session('error'))
+                            <div class="alert alert-danger">
+                                {{ session('error') }}
+                            </div>
+                        @endif
                         <div class="row">
                             <div class="col-12 col-md-3">
                                 <span>Fecha inicial:</span>
                                 <div class="form-group">
-                                    <input type="date" class="form-control" name="fecha_ini" id="fecha_ini" value="{{ old('fecha_ini') }}" required>
+                                    <input type="date" class="form-control" name="fecha_ini" id="fecha_ini"
+                                        value="{{ old('fecha_ini') }}" required>
                                 </div>
                             </div>
 
                             <div class="col-12 col-md-3">
                                 <span>Fecha final:</span>
                                 <div class="form-group">
-                                    <input type="date" class="form-control" name="fecha_fin" id="fecha_fin" value="{{ old('fecha_fin') }}" required>
+                                    <input type="date" class="form-control" name="fecha_fin" id="fecha_fin"
+                                        value="{{ old('fecha_fin') }}" required>
                                 </div>
                             </div>
 
@@ -82,14 +95,20 @@
                                 <tbody>
                                     @foreach ($sales as $sale)
                                         <tr>
-                                            <th scope="row"><a href="{{ route('sales.show', $sale) }}">{{ $sale->id }}</a></th>
+                                            <th scope="row"><a
+                                                    href="{{ route('sales.show', $sale) }}">{{ $sale->id }}</a></th>
                                             <td>{{ $sale->sale_date }}</td>
                                             <td>{{ $sale->total }}</td>
                                             <td>{{ $sale->status }}</td>
                                             <td>
-                                                <a class="jsgrid-button jsgrid-edit-button" href="{{ route('sales.pdf', $sale) }}"><i class="far fa-file-pdf"></i></a>
-                                                <a class="jsgrid-button jsgrid-edit-button" href="{{ route('sales.print', $sale) }}"><i class="fas fa-print"></i></a>
-                                                <a class="jsgrid-button jsgrid-edit-button" href="{{ route('sales.show', $sale) }}"><i class="far fa-eye"></i></a>
+                                                <a class="jsgrid-button jsgrid-edit-button"
+                                                    href="{{ route('sales.pdf', $sale) }}"><i
+                                                        class="far fa-file-pdf"></i></a>
+                                                <a class="jsgrid-button jsgrid-edit-button"
+                                                    href="{{ route('sales.print', $sale) }}"><i
+                                                        class="fas fa-print"></i></a>
+                                                <a class="jsgrid-button jsgrid-edit-button"
+                                                    href="{{ route('sales.show', $sale) }}"><i class="far fa-eye"></i></a>
                                             </td>
                                         </tr>
                                     @endforeach
@@ -107,7 +126,7 @@
     {!! Html::script('melody/js/data-table.js') !!}
     {!! Html::script('melody/js/sweetalert2@11') !!}
     <script>
-        window.onload = function () {
+        window.onload = function() {
             var fecha = new Date();
             var mes = fecha.getMonth() + 1;
             var dia = fecha.getDate();

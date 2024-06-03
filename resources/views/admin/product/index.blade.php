@@ -37,13 +37,10 @@
                     <div class="card-body">
                         <div class="d-flex justify-content-between">
                             <h4 class="card-title">Productos</h4>
-                            <div class="btn-group">
-                                <a type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                    <i class="fas fa-ellipsis-v"></i>
-                                </a>
-                                <div class="dropdown-menu dropdown-menu-right">
-                                    <a class="dropdown-item" href="{{ route('products.create') }}">Agregar</a>
-
+                            <div class="col-lg-6">
+                                <div class="text-lg-right mb-4">
+                                    <a href="{{ route('products.create') }}" class="btn btn-primary"><i
+                                            class="fas fa-plus"></i> Agregar Producto</a>
                                 </div>
                             </div>
                         </div>
@@ -59,6 +56,16 @@
                                         <th>Acciones</th>
                                     </tr>
                                 </thead>
+                                @if (session('success'))
+                                    <div class="alert alert-success">
+                                        {{ session('success') }}
+                                    </div>
+                                @endif
+                                @if (session('error'))
+                                    <div class="alert alert-danger">
+                                        {{ session('error') }}
+                                    </div>
+                                @endif
                                 <tbody>
                                     @foreach ($products as $product)
                                         <tr>
@@ -67,20 +74,19 @@
                                             </td>
                                             <td>{{ $product->stock }}</td>
                                             @if ($product->status == 'ACTIVE')
-                                            <td>
-                                                <a class="jsgrid-button btn btn-success" href="{{route('change.status.products',$product)}}">Activo <i class="fas fa-check"></i></a>
-                                            </td>
-                                                
+                                                <td>
+                                                    <a class="jsgrid-button btn btn-success"
+                                                        href="{{ route('change.status.products', $product) }}">Activo <i
+                                                            class="fas fa-check"></i></a>
+                                                </td>
                                             @else
-                                            <td>
-                                            <a class="jsgrid-button btn btn-danger" href="{{route('change.status.products',$product)}}">Desactivado <i class="fas fa-times"></i></a>
-                                        </td>
+                                                <td>
+                                                    <a class="jsgrid-button btn btn-danger"
+                                                        href="{{ route('change.status.products', $product) }}">Desactivado <i
+                                                            class="fas fa-times"></i></a>
+                                                </td>
                                             @endif
-
                                             <td>{{ $product->category->name }}</td>
-
-
-                                            <td style="width:50px;">
                                             <td style="width:50px;">
                                                 {!! Form::open([
                                                     'route' => ['products.destroy', $product],
@@ -95,9 +101,6 @@
                                                     onclick="confirmDelete({{ $product->id }})" title="Eliminar"><i
                                                         class="far fa-trash-alt"></i></button>
                                                 {!! Form::close() !!}
-                                            </td>
-
-
                                             </td>
                                         </tr>
                                     @endforeach

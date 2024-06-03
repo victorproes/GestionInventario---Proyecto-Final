@@ -23,6 +23,9 @@ Route::get('/prueba', function () {
     return view('prueba');
 });
 
+Route::resource('categories', 'CategoryController');
+
+
 Route::get('sales/reports_day', 'ReportController@reports_day')->name('reports.day');
 Route::get('sales/reports_date', 'ReportController@reports_date')->name('reports.date');
 

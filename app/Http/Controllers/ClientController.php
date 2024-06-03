@@ -22,7 +22,7 @@ class ClientController extends Controller
 
     public function index()
     {
-        $clients = Client::get();
+        $clients = Client::paginate(10);
         return view('admin.client.index', compact('clients'));
     }
 
@@ -35,9 +35,17 @@ class ClientController extends Controller
 
     public function store(StoreRequest $request)
     {
-        Client::create($request->all());
-        return redirect()->route('clients.index');
+
+        try {
+            Client::create($request->all());
+            return redirect()->route('clients.index')->with('success', 'Cliente creado correctamente.');
+        } catch (\Exception $e) {
+            return redirect()->back()->withInput()->with('error', 'Ocurrió un error al crear el cliente: ' . $e->getMessage());
+        }
     }
+       
+        
+    
 
 
     public function show(Client $client)
@@ -54,14 +62,28 @@ class ClientController extends Controller
 
     public function update(UpdateRequest $request, Client $client)
     {
-        $client->update($request->all());
-        return redirect()->route('clients.index');
+
+        try {
+            $client->update($request->all());
+            return redirect()->route('clients.edit', $client->id)->with('success', 'Cliente actualizado correctamente.');
+        } catch (\Exception $e) {
+            return redirect()->back()->withInput()->with('error', 'Ocurrió un error al actualizar al cliente: ' . $e->getMessage());
+        }
+        
+       
     }
 
 
     public function destroy(Client $client)
     {
-        $client->delete();
-        return redirect()->route('clients.index');
+
+        try {
+            $client->delete();
+            return redirect()->route('clients.index')->with('success', 'Cliente eliminado correctamente.');
+        } catch (\Illuminate\Database\QueryException $e) {
+            return redirect()->route('clients.index')->with('error', 'No se puede eliminar al cliente porque tiene ventas asociadas.');
+        }
+        
+        
     }
 }

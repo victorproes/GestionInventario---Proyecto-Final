@@ -35,26 +35,12 @@
             <div class="col-lg-12 grid-margin stretch-card">
                 <div class="card">
                     <div class="card-body">
-
-                        <!-- Mensajes de error -->
-                        @if ($errors->any())
-                            <div class="alert alert-danger">
-                                <ul>
-                                    @foreach ($errors->all() as $error)
-                                        <li>{{ $error }}</li>
-                                    @endforeach
-                                </ul>
-                            </div>
-                        @endif
                         <div class="d-flex justify-content-between">
                             <h4 class="card-title">Compras</h4>
-                            <div class="btn-group">
-                                <a type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                    <i class="fas fa-ellipsis-v"></i>
-                                </a>
-                                <div class="dropdown-menu dropdown-menu-right">
-                                    <a class="dropdown-item" href="{{ route('purchases.create') }}">Registrar</a>
-                                    
+                            <div class="col-lg-6">
+                                <div class="text-lg-right mb-4">
+                                    <a href="{{ route('purchases.create') }}" class="btn btn-primary"><i
+                                            class="fas fa-plus"></i> Agregar Compra</a>
                                 </div>
                             </div>
                         </div>
@@ -69,6 +55,16 @@
                                         <th style="width:50px">Acciones</th>
                                     </tr>
                                 </thead>
+                                @if (session('success'))
+                                    <div class="alert alert-success">
+                                        {{ session('success') }}
+                                    </div>
+                                @endif
+                                @if (session('error'))
+                                    <div class="alert alert-danger">
+                                        {{ session('error') }}
+                                    </div>
+                                @endif
                                 <tbody>
                                     @foreach ($purchases as $purchase)
                                         <tr>
@@ -132,5 +128,9 @@
                 }
             });
         }
+
+        setTimeout(function() {
+        $(".alert-success").fadeOut();
+    }, 3000); // Oculta el mensaje de éxito después de 3 segundos
     </script>
 @endsection

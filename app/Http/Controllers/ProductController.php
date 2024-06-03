@@ -27,39 +27,56 @@ class ProductController extends Controller
 
     public function index()
     {
-        $products = Product::all();
-        return view('admin.product.index', compact('products'));
+        try {
+            $products = Product::paginate(10);
+            return view('admin.product.index', compact('products'));
+        } catch (\Exception $e) {
+            
+            return redirect()->back()->with('error', 'Error al obtener la lista de productos.');
+        }
     }
 
 
     public function create()
     {
-        $categories = Category::all();
-        $providers = Provider::all();
-        return view('admin.product.agregarEditar', compact('categories', 'providers'));
+        try {
+            $categories = Category::all();
+            $providers = Provider::all();
+            return view('admin.product.agregarEditar', compact('categories', 'providers'));
+        } catch (\Exception $e) {
+            
+            return redirect()->back()->with('error', 'Error al cargar la vista de crear producto.');
+        }
     }
 
 
     public function store(StoreRequest $request)
     {
         
+        try {
+            if ($request->hasFile('image')) {
+                $image = $request->file('image');
+                $image_name = time() . '.' . $image->getClientOriginalExtension();
+                $image->move(public_path('images'), $image_name);
+            } else {
+                $image_name = null; // Asignar null si no se proporciona una imagen
+            }
+    
+            // Crear el producto y asignar el nombre de la imagen
+            $product = Product::create($request->all() + ['image' => $image_name]);
+    
+            // Actualizar el código del producto
+            $product->update(['code' => $product->id]);
+
+            return redirect()->route('products.index')->with('success', 'Producto creado correctamente.');
+        } catch (\Exception $e) {
+            
+            return redirect()->back()->with('error', 'Error al guardar el producto.');
+        }
+       
+        
 
        
-        if ($request->hasFile('image')) {
-            $image = $request->file('image');
-            $image_name = time() . '.' . $image->getClientOriginalExtension();
-            $image->move(public_path('images'), $image_name);
-        } else {
-            $image_name = null; // Asignar null si no se proporciona una imagen
-        }
-
-        // Crear el producto y asignar el nombre de la imagen
-        $product = Product::create($request->all() + ['image' => $image_name]);
-
-        // Actualizar el código del producto
-        $product->update(['code' => $product->id]);
-
-        return redirect()->route('products.create')->with('success', 'Producto creado correctamente.')->with('delay', 3000);
     }
 
 
@@ -72,15 +89,21 @@ class ProductController extends Controller
 
     public function edit(Product $product)
     {
-        $categories = Category::all();
-        $providers = Provider::all();
-        return view('admin.product.agregarEditar', compact('product', 'categories', 'providers'));
+        try {
+            $categories = Category::all();
+            $providers = Provider::all();
+            return view('admin.product.agregarEditar', compact('product', 'categories', 'providers'));
+        } catch (\Exception $e) {
+            
+            return redirect()->back()->with('error', 'Error al cargar la vista de editar producto.');
+        }
     }
 
 
     public function update(UpdateRequest $request, Product $product)
     {
-        $image_name = $product->image;
+        try {
+            $image_name = $product->image;
         if ($request->hasFile('picture')) {
             $file = $request->file('picture');
             $image_name = time() . '_' . $file->getClientOriginalName();
@@ -95,25 +118,42 @@ class ProductController extends Controller
         // Actualizar el producto con los datos
         $product->update($data);
 
-        return redirect()->route('products.index');
+        return redirect()->route('products.edit', $product->id)->with('success', 'Producto actualizado correctamente.');
+        } catch (\Exception $e) {
+            
+            return redirect()->back()->with('error', 'Error al actualizar el producto.');
+        }
+        
     }
 
 
 
     public function destroy(Product $product)
     {
-        $product->delete();
-        return redirect()->route('products.index');
+        try {
+            $product->delete();
+            return redirect()->route('products.index')->with('success', 'Producto eliminado correctamente.');
+        } catch (\Exception $e) {
+            
+            return redirect()->back()->with('error', 'Error al eliminar el producto.');
+        }
+        
     }
 
     public function change_status(Product $product)
     {
-        if ($product->status == 'ACTIVE') {
-            $product->update(['status' => 'DEACTIVATED']);
-            return redirect()->back();
-        } else {
-            $product->update(['status' => 'ACTIVE']);
-            return redirect()->back();
+        try {
+            if ($product->status == 'ACTIVE') {
+                $product->update(['status' => 'DEACTIVATED']);
+                return redirect()->back();
+            } else {
+                $product->update(['status' => 'ACTIVE']);
+                return redirect()->back();
+            }
+        } catch (\Exception $e) {
+            
+            return redirect()->back()->with('error', 'Error al cambiar el estado del producto.');
         }
+        
     }
 }

@@ -32,7 +32,16 @@
                         <div class="d-flex justify-content-between">
                             <h4 class="card-title">Registro de venta</h4>
                         </div>
-
+                        @if (session('success'))
+                                    <div class="alert alert-success">
+                                        {{ session('success') }}
+                                    </div>
+                                @endif
+                                @if (session('error'))
+                                    <div class="alert alert-danger">
+                                        {{ session('error') }}
+                                    </div>
+                                @endif
                         {!! Form::open(['route' => 'sales.store', 'method' => 'POST']) !!}
                         @include('admin.sale._form')
                         <div class="form-group">
@@ -180,7 +189,9 @@ function eliminar(index) {
     evaluar();
 }
 
-
+setTimeout(function() {
+        $(".alert-success").fadeOut();
+    }, 3000); // Oculta el mensaje de éxito después de 3 segundos
 
    </script>
 @endsection

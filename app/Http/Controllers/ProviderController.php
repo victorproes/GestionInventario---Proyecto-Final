@@ -22,7 +22,7 @@ class ProviderController extends Controller
 
     public function index()
     {
-        $providers=Provider::get();
+        $providers=Provider::paginate(10);
         return view('admin.provider.index',compact('providers'));
     }
 
@@ -35,8 +35,14 @@ class ProviderController extends Controller
    
     public function store(StoreRequest $request)
     {
-        Provider::create($request->validated());
-        return redirect()->route('providers.index');
+        try {
+            Provider::create($request->validated());
+            return redirect()->route('providers.index')->with('success', 'Proveedor agregado correctamente.');
+        } catch (\Exception $e) {
+            return redirect()->back()->withInput()->with('error', 'Ocurrió un error al agregar el proveedor: ' . $e->getMessage());
+        }
+        
+     
     }
 
    
@@ -55,14 +61,24 @@ class ProviderController extends Controller
   
     public function update(UpdateRequest $request, Provider $provider)
     {
-        $provider->update($request->validated());
-        return redirect()->route('providers.index');
+        try {
+            $provider->update($request->all());
+            return redirect()->route('providers.edit', $provider->id)->with('success', 'Proveedor actualizado correctamente.');
+        } catch (\Exception $e) {
+            return redirect()->back()->withInput()->with('error', 'Ocurrió un error al actualizar el proveedor: ' . $e->getMessage());
+        }
     }
 
   
     public function destroy(Provider $provider)
     {
-        $provider->delete();
-        return redirect()->route('providers.index');
+        try {
+            $provider->delete();
+            return redirect()->route('providers.index')->with('success', 'Proveedor eliminado correctamente.');
+        } catch (\Illuminate\Database\QueryException $e) {
+            return redirect()->route('providers.index')->with('error', 'No se puede eliminar el proveedor porque tiene productos y compras asociadas.');
+        }
+       
+        
     }
 }

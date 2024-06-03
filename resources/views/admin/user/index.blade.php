@@ -37,13 +37,10 @@
                     <div class="card-body">
                         <div class="d-flex justify-content-between">
                             <h4 class="card-title">Usuarios del sistema</h4>
-                            <div class="btn-group">
-                                <a type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                    <i class="fas fa-ellipsis-v"></i>
-                                </a>
-                                <div class="dropdown-menu dropdown-menu-right">
-                                    <a class="dropdown-item" href="{{ route('users.create') }}">Agregar</a>
-                                    
+                            <div class="col-lg-6">
+                                <div class="text-lg-right mb-4">
+                                    <a href="{{ route('users.create') }}" class="btn btn-primary"><i
+                                            class="fas fa-plus"></i> Agregar Usuario</a>
                                 </div>
                             </div>
                         </div>
@@ -57,6 +54,16 @@
                                         <th>Acciones</th>
                                     </tr>
                                 </thead>
+                                @if (session('success'))
+                                <div class="alert alert-success">
+                                    {{ session('success') }}
+                                </div>
+                            @endif
+                            @if (session('error'))
+                                <div class="alert alert-danger">
+                                    {{ session('error') }}
+                                </div>
+                            @endif
                                 <tbody>
                                     @foreach ($users as $user)
                                         <tr>

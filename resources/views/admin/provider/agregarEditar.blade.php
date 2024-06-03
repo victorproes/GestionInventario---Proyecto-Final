@@ -36,7 +36,16 @@
                             @if (isset($provider))
                                 @method('PUT')
                             @endif
-
+                            @if (session('success'))
+                                <div class="alert alert-success">
+                                    {{ session('success') }}
+                                </div>
+                            @endif
+                            @if (session('error'))
+                                <div class="alert alert-danger">
+                                    {{ session('error') }}
+                                </div>
+                            @endif
                             <div class="form-group">
                                 <label for="name">Nombre:</label>
                                 <input type="text" class="form-control" id="name" name="name"
@@ -123,5 +132,9 @@
                 phoneError.style.display = 'none';
             }
         }, 3000);
+
+        setTimeout(function() {
+        $(".alert-success").fadeOut();
+    }, 3000); // Oculta el mensaje de éxito después de 3 segundos
     </script>
 @endsection

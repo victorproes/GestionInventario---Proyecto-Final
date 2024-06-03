@@ -24,47 +24,42 @@ class UpdateRequest extends FormRequest
     public function rules()
     {
         return [
-            'name'=>'required|string|max:255',
-
-
-            'email'=>'required|email|string|unique:providers,email,'.$this->route('provider')->id.'|max:255',
-            
-            'cif'=>'required|string|min:9|unique:providers,cif,'.$this->route('provider')->id.'|max:9',
-            'address'=>'nullable|string|max:255',
-            'phone'=>'required|string|min:9|unique:providers,phone,'.$this->route('provider')->id.'|max:9',
+            'name' => 'required|string|max:255',
+            'email' => 'required|email|string|max:255|unique:providers,email,' . $this->route('provider')->id,
+            'cif' => ['required', 'string', 'regex:/^[A-Za-z0-9]{1}[0-9]{7}[A-Za-z0-9]{1}$/', 'unique:providers,cif,' . $this->route('provider')->id],
+            'address' => 'nullable|string|max:255',
+            'phone' => ['required', 'regex:/^[679]{1}[0-9]{8}$/', 'unique:providers,phone,' . $this->route('provider')->id],
         ];
     }
 
-    public function messages(){
-        return[
-            'name.required'=>'Este campo es requerido.',
-            'name.string'=>'El valor no es correcto.',
-            'name.max'=>'Solo se permiten 255 caracteres.',
+    public function messages()
+    {
+        return [
+            'name.required' => 'Este campo es requerido.',
+            'name.string' => 'El valor no es correcto.',
+            'name.max' => 'Solo se permiten 255 caracteres.',
 
-            'email.required'=>'Este campo es requerido.',
-            'email.string'=>'El valor no es correcto.',
-            'email.max'=>'Solo se permiten 255 caracteres.',
-            'email.email'=>'No es un correo electrónico.',
-            'email.unique'=>'Ya se encuentra registrado.',
+            'email.required' => 'Este campo es requerido.',
+            'email.string' => 'El valor no es correcto.',
+            'email.max' => 'Solo se permiten 255 caracteres.',
+            'email.email' => 'No es un correo electrónico.',
+            'email.unique' => 'Ya se encuentra registrado.',
 
-            'cif.required'=>'Este campo es requerido.',
-            'cif.string'=>'El valor no es correcto.',
-            'cif.max'=>'Solo se permiten 9 caracteres.',
-            'cif.min'=>'Se requiere de 9 caracteres.',
-            'cif.unique'=>'Ya se encuentra registrado.',
+            'cif.required' => 'Este campo es requerido.',
+            'cif.string' => 'El valor no es correcto.',
+            'cif.regex' => 'El CIF no tiene un formato válido.',
+            'cif.unique' => 'Ya se encuentra registrado.',
 
-            'address.max'=>'Solo se permiten 255 caracteres.',
-            'address.string'=>'El valor no es correcto.',
+            'address.max' => 'Solo se permiten 255 caracteres.',
+            'address.string' => 'El valor no es correcto.',
 
-            'phone.required'=>'Este campo es requerido.',
-            'phone.string'=>'El valor no es correcto.',
-            'phone.max'=>'Solo se permiten 9 caracteres.',
-            'phone.min'=>'Se requiere de 9 caracteres.',
-            'phone.unique'=>'Ya se encuentra registrado.',
-            
+            'phone.required' => 'Este campo es requerido.',
+            'phone.regex' => 'El teléfono no tiene un formato válido.',
+            'phone.unique' => 'Ya se encuentra registrado.',
 
 
-            
+
+
         ];
     }
 }

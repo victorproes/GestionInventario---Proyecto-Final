@@ -3,13 +3,13 @@
 @section('title', 'Gestión de roles del sistema')
 
 @section('styles')
-<style type="text/css">
-    .unstyled-button{
-        border: none;
-        padding: 0;
-        background: none;
-    }
-</style>
+    <style type="text/css">
+        .unstyled-button {
+            border: none;
+            padding: 0;
+            background: none;
+        }
+    </style>
 @endsection
 
 @section('options')
@@ -37,13 +37,10 @@
                     <div class="card-body">
                         <div class="d-flex justify-content-between">
                             <h4 class="card-title">Roles del sistema</h4>
-                            <div class="btn-group">
-                                <a type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                    <i class="fas fa-ellipsis-v"></i>
-                                </a>
-                                <div class="dropdown-menu dropdown-menu-right">
-                                    <a class="dropdown-item" href="{{ route('roles.create') }}">Agregar</a>
-                                    
+                            <div class="col-lg-6">
+                                <div class="text-lg-right mb-4">
+                                    <a href="{{ route('roles.create') }}" class="btn btn-primary"><i
+                                            class="fas fa-plus"></i> Agregar Rol</a>
                                 </div>
                             </div>
                         </div>
@@ -57,6 +54,16 @@
                                         <th>Acciones</th>
                                     </tr>
                                 </thead>
+                                @if (session('success'))
+                                    <div class="alert alert-success">
+                                        {{ session('success') }}
+                                    </div>
+                                @endif
+                                @if (session('error'))
+                                    <div class="alert alert-danger">
+                                        {{ session('error') }}
+                                    </div>
+                                @endif
                                 <tbody>
                                     @foreach ($roles as $role)
                                         <tr>
@@ -64,14 +71,19 @@
                                             <td><a href="{{ route('roles.show', $role) }}">{{ $role->name }}</a></td>
                                             <td>{{ $role->description }}</td>
                                             <td style="width:50px;">
-                                                <td style="width:50px;">
-                                                    {!! Form::open(['route' => ['roles.destroy', $role], 'method' => 'DELETE', 'id' => 'delete-form-' . $role->id]) !!}
-                                                    <a class="jsgrid-button jsgrid-edit-button" href="{{ route('roles.edit', $role) }}" title="Editar"><i class="far fa-edit"></i></a>
-                                                    <button type="button" class="jsgrid-button jsgrid-delete-button unstyled-button" onclick="confirmDelete({{ $role->id }})" title="Eliminar"><i class="far fa-trash-alt"></i></button>
-                                                    {!! Form::close() !!}
-                                                </td>
-                                                
-                                                
+                                            <td style="width:50px;">
+                                                {!! Form::open(['route' => ['roles.destroy', $role], 'method' => 'DELETE', 'id' => 'delete-form-' . $role->id]) !!}
+                                                <a class="jsgrid-button jsgrid-edit-button"
+                                                    href="{{ route('roles.edit', $role) }}" title="Editar"><i
+                                                        class="far fa-edit"></i></a>
+                                                <button type="button"
+                                                    class="jsgrid-button jsgrid-delete-button unstyled-button"
+                                                    onclick="confirmDelete({{ $role->id }})" title="Eliminar"><i
+                                                        class="far fa-trash-alt"></i></button>
+                                                {!! Form::close() !!}
+                                            </td>
+
+
                                             </td>
                                         </tr>
                                     @endforeach
@@ -90,7 +102,7 @@
     {!! Html::script('melody/js/sweetalert2@11') !!}
     <script>
         function confirmDelete(categoryId) {
-            console.log(categoryId  );
+            console.log(categoryId);
             Swal.fire({
                 title: '¿Estás seguro?',
                 text: "¡No podrás revertir esto!",

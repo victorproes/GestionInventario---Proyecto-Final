@@ -35,16 +35,6 @@
             <div class="col-lg-12 grid-margin stretch-card">
                 <div class="card">
                     <div class="card-body">
-                               <!-- Mensajes de error -->
-                               @if ($errors->any())
-                               <div class="alert alert-danger">
-                                   <ul>
-                                       @foreach ($errors->all() as $error)
-                                           <li>{{ $error }}</li>
-                                       @endforeach
-                                   </ul>
-                               </div>
-                           @endif
                         <div class="d-flex justify-content-between">
                             <h4 class="card-title">Ventas</h4>
                             <div class="btn-group">
@@ -68,6 +58,16 @@
                                         <th style="width:50px">Acciones</th>
                                     </tr>
                                 </thead>
+                                @if (session('success'))
+                                    <div class="alert alert-success">
+                                        {{ session('success') }}
+                                    </div>
+                                @endif
+                                @if (session('error'))
+                                    <div class="alert alert-danger">
+                                        {{ session('error') }}
+                                    </div>
+                                @endif
                                 <tbody>
                                     @foreach ($sales as $sale)
                                         <tr>
@@ -131,5 +131,9 @@
                 }
             });
         }
+
+        setTimeout(function() {
+        $(".alert-success").fadeOut();
+    }, 3000); // Oculta el mensaje de éxito después de 3 segundos
     </script>
 @endsection

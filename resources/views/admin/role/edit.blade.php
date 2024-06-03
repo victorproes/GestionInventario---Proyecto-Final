@@ -34,6 +34,16 @@
                         </div>
 
                         {!! Form::model($role,['route'=>['roles.update',$role],'method'=>'PUT']) !!}
+                        @if (session('success'))
+                        <div class="alert alert-success">
+                            {{ session('success') }}
+                        </div>
+                    @endif
+                    @if (session('error'))
+                        <div class="alert alert-danger">
+                            {{ session('error') }}
+                        </div>
+                    @endif
                         <div class="form-group">
                             <label for="name">Nombre</label>
                             <input type="text" name="name" value="{{$role->name}}" id="name" class="form-control" placeholder="" aria-describedby="helpId">

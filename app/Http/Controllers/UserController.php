@@ -7,6 +7,7 @@ use App\User;
 use Caffeinated\Shinobi\Models\Role;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Log;
 
 class UserController extends Controller
 {
@@ -21,61 +22,84 @@ class UserController extends Controller
         $this->middleware('can:users.destroy')->only(['destroy']);
     }
 
-
     public function index()
     {
-        
-        $user = Auth::user();
-
-       
-        $username = $user->name;
-
-        
-        $users = User::get();
-        return view('admin.user.index', compact('users', 'username'));
+        try {
+            $user = Auth::user();
+            $username = $user->name;
+            $users = User::get();
+            return view('admin.user.index', compact('users', 'username'));
+        } catch (\Exception $e) {
+            Log::error('Error fetching users: ' . $e->getMessage());
+            return redirect()->back()->with('error', 'Ocurrió un error al obtener la lista de usuarios.');
+        }
     }
-
 
     public function create()
     {
-        $roles = Role::get();
-        return view('admin.user.create', compact('roles'));
+        try {
+            $roles = Role::get();
+            return view('admin.user.create', compact('roles'));
+        } catch (\Exception $e) {
+            Log::error('Error creating user form: ' . $e->getMessage());
+            return redirect()->back()->with('error', 'Ocurrió un error al cargar el formulario de creación de usuario.');
+        }
     }
-
 
     public function store(Request $request)
     {
-        $user = User::create($request->all());
-        $user->update(['password' => Hash::make($request->password)]);
-        $user->roles()->sync($request->get('roles'));
-        return redirect()->route('users.index');
+        try {
+            $user = User::create($request->all());
+            $user->update(['password' => Hash::make($request->password)]);
+            $user->roles()->sync($request->get('roles'));
+            return redirect()->route('users.index');
+        } catch (\Exception $e) {
+            Log::error('Error storing user: ' . $e->getMessage());
+            return redirect()->back()->with('error', 'Ocurrió un error al crear el usuario.');
+        }
     }
-
 
     public function show(User $user)
     {
-        return view('admin.user.show', compact('user'));
+        try {
+            return view('admin.user.show', compact('user'));
+        } catch (\Exception $e) {
+            Log::error('Error showing user: ' . $e->getMessage());
+            return redirect()->back()->with('error', 'Ocurrió un error al mostrar el usuario.');
+        }
     }
-
 
     public function edit(User $user)
     {
-        $roles = Role::get();
-        return view('admin.user.edit', compact('user', 'roles'));
+        try {
+            $roles = Role::get();
+            return view('admin.user.edit', compact('user', 'roles'));
+        } catch (\Exception $e) {
+            Log::error('Error editing user: ' . $e->getMessage());
+            return redirect()->back()->with('error', 'Ocurrió un error al cargar el formulario de edición de usuario.');
+        }
     }
-
 
     public function update(Request $request, User $user)
     {
-        $user->update($request->all());
-        $user->roles()->sync($request->get('roles'));
-        return redirect()->route('users.index');
+        try {
+            $user->update($request->all());
+            $user->roles()->sync($request->get('roles'));
+            return redirect()->route('users.index');
+        } catch (\Exception $e) {
+            Log::error('Error updating user: ' . $e->getMessage());
+            return redirect()->back()->with('error', 'Ocurrió un error al actualizar el usuario.');
+        }
     }
-
 
     public function destroy(User $user)
     {
-        $user->delete();
-        return back();
+        try {
+            $user->delete();
+            return back();
+        } catch (\Exception $e) {
+            Log::error('Error deleting user: ' . $e->getMessage());
+            return redirect()->back()->with('error', 'Ocurrió un error al eliminar el usuario.');
+        }
     }
 }

@@ -38,6 +38,16 @@
                         <div class="d-flex justify-content-between">
                             <h4 class="card-title">Gestión de empresa</h4>
                         </div>
+                        @if (session('success'))
+                            <div class="alert alert-success">
+                                {{ session('success') }}
+                            </div>
+                        @endif
+                        @if (session('error'))
+                            <div class="alert alert-danger">
+                                {{ session('error') }}
+                            </div>
+                        @endif
                         <div class="form-row">
                             <div class="form-group col-md-6">
                                 <strong><i class="fas fa-file-signature mr-1"></i>Nombre</strong>
@@ -62,9 +72,9 @@
                                         <strong><i class="fas fa-exclamation-circle mr-1">Logo</i></strong><br>
                                     </div>
                                     <div class="col-md-6">
-                                        
-                                        <img class="rounded float-left" src="{{ asset('image/'.$business->logo) }}" alt="logo"
-                                            style="width: 50px; height:50px;">
+
+                                        <img class="rounded float-left" src="{{ asset('image/' . $business->logo) }}"
+                                            alt="logo" style="width: 50px; height:50px;">
                                     </div>
                                 </div>
                             </div>

@@ -12,18 +12,10 @@
     </style>
 @endsection
 
-@section('options')
-@endsection
-
-@section('preference')
-@endsection
-
 @section('content')
     <div class="content-wrapper">
         <div class="page-header">
-            <h3 class="page-title">
-                Categorías
-            </h3>
+            <h3 class="page-title">Categorías</h3>
             <nav aria-label="breadcrumb">
                 <ol class="breadcrumb">
                     <li class="breadcrumb-item"><a href="#">Panel de Administrador</a></li>
@@ -37,13 +29,9 @@
                     <div class="card-body">
                         <div class="d-flex justify-content-between">
                             <h4 class="card-title">Categorías</h4>
-                            <div class="btn-group">
-                                <a type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                    <i class="fas fa-ellipsis-v"></i>
-                                </a>
-                                <div class="dropdown-menu dropdown-menu-right">
-                                    <a class="dropdown-item" href="{{ route('categories.create') }}">Agregar</a>
-
+                            <div class="col-lg-6">
+                                <div class="text-lg-right mb-4">
+                                    <a href="{{ route('categories.create') }}" class="btn btn-primary"><i class="fas fa-plus"></i> Agregar Categoría</a>
                                 </div>
                             </div>
                         </div>
@@ -62,13 +50,11 @@
                                         {{ session('success') }}
                                     </div>
                                 @endif
-
                                 @if (session('error'))
                                     <div class="alert alert-danger">
                                         {{ session('error') }}
                                     </div>
                                 @endif
-
                                 <tbody>
                                     @foreach ($categories as $category)
                                         <tr>
@@ -77,7 +63,6 @@
                                                     href="{{ route('categories.show', $category) }}">{{ $category->name }}</a>
                                             </td>
                                             <td>{{ $category->description }}</td>
-                                            <td style="width:50px;">
                                             <td style="width:50px;">
                                                 {!! Form::open([
                                                     'route' => ['categories.destroy', $category],
@@ -92,9 +77,6 @@
                                                     onclick="confirmDelete({{ $category->id }})" title="Eliminar"><i
                                                         class="far fa-trash-alt"></i></button>
                                                 {!! Form::close() !!}
-                                            </td>
-
-
                                             </td>
                                         </tr>
                                     @endforeach
@@ -125,10 +107,15 @@
                 cancelButtonText: 'Cancelar'
             }).then((result) => {
                 if (result.isConfirmed) {
-                    // Si el usuario confirma, enviar el formulario de eliminación
                     document.getElementById('delete-form-' + categoryId).submit();
                 }
             });
         }
+
+        setTimeout(function() {
+            document.querySelectorAll('.alert').forEach(function(alert) {
+                alert.style.display = 'none';
+            });
+        }, 3000);
     </script>
 @endsection

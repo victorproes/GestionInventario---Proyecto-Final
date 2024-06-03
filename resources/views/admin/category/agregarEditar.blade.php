@@ -47,6 +47,7 @@
                                     {{ session('error') }}
                                 </div>
                             @endif
+
                             <div class="form-group">
                                 <label for="name">Nombre:</label>
                                 <input type="text" class="form-control" id="name" name="name"
@@ -76,10 +77,11 @@
 @section('scripts')
     {!! Html::script('melody/js/data-table.js') !!}
     <script>
-        // Ocultar automáticamente los mensajes de error después de 3 segundos
+        // Ocultar automáticamente los mensajes de éxito y error después de 3 segundos
         setTimeout(function() {
-            document.getElementById('name-error').style.display = 'none';
-            document.getElementById('description-error').style.display = 'none';
+            document.querySelectorAll('.alert').forEach(function(alert) {
+                alert.style.display = 'none';
+            });
         }, 3000);
     </script>
 @endsection

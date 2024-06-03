@@ -3,13 +3,13 @@
 @section('title', 'Gestión de categorías')
 
 @section('styles')
-<style type="text/css">
-    .unstyled-button{
-        border: none;
-        padding: 0;
-        background: none;
-    }
-</style>
+    <style type="text/css">
+        .unstyled-button {
+            border: none;
+            padding: 0;
+            background: none;
+        }
+    </style>
 @endsection
 
 @section('options')
@@ -37,13 +37,10 @@
                     <div class="card-body">
                         <div class="d-flex justify-content-between">
                             <h4 class="card-title">Proveedores</h4>
-                            <div class="btn-group">
-                                <a type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                    <i class="fas fa-ellipsis-v"></i>
-                                </a>
-                                <div class="dropdown-menu dropdown-menu-right">
-                                    <a class="dropdown-item" href="{{ route('providers.create') }}">Agregar</a>
-                                    
+                            <div class="col-lg-6">
+                                <div class="text-lg-right mb-4">
+                                    <a href="{{ route('providers.create') }}" class="btn btn-primary"><i
+                                            class="fas fa-plus"></i> Agregar Proveedor</a>
                                 </div>
                             </div>
                         </div>
@@ -54,30 +51,54 @@
                                         <th>Id</th>
                                         <th>Nombre</th>
                                         <th>Email</th>
-                                        <th>Cif</th>
-                                        <th>Address</th>
-                                        <th>Teléfono</th>
+                                        <th>CIF</th>
+                                        <th>Dirección</th>
+                                        <th>Telefono</th>
                                         <th>Acciones</th>
                                     </tr>
                                 </thead>
+                                @if (session('success'))
+                                    <div class="alert alert-success">
+                                        {{ session('success') }}
+                                    </div>
+                                @endif
+                                @if (session('error'))
+                                    <div class="alert alert-danger">
+                                        {{ session('error') }}
+                                    </div>
+                                @endif
                                 <tbody>
                                     @foreach ($providers as $provider)
                                         <tr>
                                             <th scope="row">{{ $provider->id }}</th>
-                                            <td><a href="{{ route('providers.show', $provider) }}">{{ $provider->name }}</a></td>
-                                            <td><a href="{{ route('providers.show', $provider) }}">{{ $provider->email }}</a></td>
-                                            <td><a href="{{ route('providers.show', $provider) }}">{{ $provider->cif }}</a></td>
-                                            <td><a href="{{ route('providers.show', $provider) }}">{{ $provider->address }}</a></td>
-                                            <td><a href="{{ route('providers.show', $provider) }}">{{ $provider->phone }}</a></td>
+                                            <td><a href="{{ route('providers.show', $provider) }}">{{ $provider->name }}</a>
+                                            </td>
+                                            <td><a
+                                                    href="{{ route('providers.show', $provider) }}">{{ $provider->email }}</a>
+                                            </td>
+                                            <td><a href="{{ route('providers.show', $provider) }}">{{ $provider->cif }}</a>
+                                            </td>
+                                            <td><a
+                                                    href="{{ route('providers.show', $provider) }}">{{ $provider->address }}</a>
+                                            </td>
+                                            <td><a
+                                                    href="{{ route('providers.show', $provider) }}">{{ $provider->phone }}</a>
+                                            </td>
                                             <td>{{ $provider->description }}</td>
                                             <td style="width:50px;">
-                                                <td style="width:50px;">
-                                                    {!! Form::open(['route' => ['providers.destroy', $provider], 'method' => 'DELETE']) !!}
-                                                    <a class="jsgrid-button jsgrid-edit-button" href="{{ route('providers.edit', $provider) }}" title="Editar"><i class="far fa-edit"></i></a>
-                                                    <button type="submit" class="jsgrid-button jsgrid-delete-button unstyled-button" title="Eliminar"><i class="far fa-trash-alt"></i></button>
-                                                    {!! Form::close() !!}
-                                                </td>
-                                                
+                                                {!! Form::open([
+                                                    'route' => ['providers.destroy', $provider],
+                                                    'method' => 'DELETE',
+                                                    'id' => 'delete-form-' . $provider->id,
+                                                ]) !!}
+                                                <a class="jsgrid-button jsgrid-edit-button"
+                                                    href="{{ route('providers.edit', $provider) }}" title="Editar"><i
+                                                        class="far fa-edit"></i></a>
+                                                <button type="button"
+                                                    class="jsgrid-button jsgrid-delete-button unstyled-button"
+                                                    onclick="confirmDelete({{ $provider->id }})" title="Eliminar"><i
+                                                        class="far fa-trash-alt"></i></button>
+                                                {!! Form::close() !!}
                                             </td>
                                         </tr>
                                     @endforeach
@@ -92,5 +113,29 @@
 @endsection
 
 @section('scripts')
-    {!! Html::script('melody/js/data-table.js') !!}
+    {!!Html::script('melody/js/data-table.js')!!}
+    {!!Html::script('melody/js/sweetalert2@11')!!}
+    <script>
+        function confirmDelete(categoryId) {
+            console.log(categoryId);
+            Swal.fire({
+                title: '¿Estás seguro?',
+                text: "¡No podrás revertir esto!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Sí, eliminarlo!'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    // Si el usuario confirma, enviar el formulario de eliminación
+                    document.getElementById('delete-form-' + categoryId).submit();
+                }
+            });
+        }
+
+        setTimeout(function() {
+        $(".alert-success").fadeOut();
+    }, 3000); // Oculta el mensaje de éxito después de 3 segundos
+    </script>
 @endsection
