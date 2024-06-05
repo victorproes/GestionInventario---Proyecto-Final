@@ -51,9 +51,7 @@ Route::resource('business', 'BusinessController')->names('business')->only([
     'index','update'
 ]);
 
-Route::resource('printers', 'PrinterController')->names('printers')->only([
-    'index','update'
-]);
+
 
 Route::get('purchases/upload/{purchase}','PurchaseController@Upload')->name('upload.purchases');
 

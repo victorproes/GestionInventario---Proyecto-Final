@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Document</title>
+    <title>Iniciar Sesión</title>
     <style>
         @import url(https://fonts.googleapis.com/css?family=Open+Sans:400,600,700);
 
@@ -104,13 +104,23 @@ button {
     <div class="login">
         <form method="POST" action="{{ route('login') }}">
             @csrf
-            <input type="email" name="email" id="email" placeholder="email" required="required" />
+            @if ($errors->any())
+            <div class="alert alert-danger">
+                <ul>
+                    @foreach ($errors->all() as $error)
+                        <li>{{ $error }}</li>
+                    @endforeach
+                </ul>
+            </div>
+        @endif
+            <input type="email" name="email" id="email" placeholder="Email" required="required" />
             <input type="password" name="password" id="password" placeholder="Password" required="required" />
             <button type="submit" class="btn btn-primary btn-block btn-large">Iniciar Sesion</button>
         </form>
     </div>
 
-
+    
 </body>
+
 
 </html>

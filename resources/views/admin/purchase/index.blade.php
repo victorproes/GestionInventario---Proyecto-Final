@@ -35,6 +35,16 @@
             <div class="col-lg-12 grid-margin stretch-card">
                 <div class="card">
                     <div class="card-body">
+                        <!-- Mensajes de error -->
+                        @if ($errors->any())
+                            <div class="alert alert-danger">
+                                <ul>
+                                    @foreach ($errors->all() as $error)
+                                        <li>{{ $error }}</li>
+                                    @endforeach
+                                </ul>
+                            </div>
+                        @endif
                         <div class="d-flex justify-content-between">
                             <h4 class="card-title">Compras</h4>
                             <div class="col-lg-6">
@@ -46,6 +56,7 @@
                         </div>
                         <div class="table-responsive">
                             <table id="order-listing" class="table">
+                                
                                 <thead>
                                     <tr>
                                         <th>Id</th>
@@ -56,20 +67,20 @@
                                     </tr>
                                 </thead>
                                 @if (session('success'))
-                                    <div class="alert alert-success">
-                                        {{ session('success') }}
-                                    </div>
-                                @endif
-                                @if (session('error'))
-                                    <div class="alert alert-danger">
-                                        {{ session('error') }}
-                                    </div>
-                                @endif
+                                <div class="alert alert-success">
+                                    {{ session('success') }}
+                                </div>
+                            @endif
+                            @if (session('error'))
+                                <div class="alert alert-danger">
+                                    {{ session('error') }}
+                                </div>
+                            @endif
                                 <tbody>
                                     @foreach ($purchases as $purchase)
                                         <tr>
                                             <th scope="row"><a href="{{route('purchases.show',$purchase)}}">{{ $purchase->id }}</a></th>
-                                            <td>{{ $purchase->purchase_date }}</td>
+                                            <td>{{ \Carbon\Carbon::parse($purchase->purchase_date)->locale('es')->isoFormat('D [de] MMMM [de] YYYY HH:mm:ss') }}</td>
                                             <td>{{ $purchase->total }}</td>
                                             @if ($purchase->status == 'VALID')
                                             <td>

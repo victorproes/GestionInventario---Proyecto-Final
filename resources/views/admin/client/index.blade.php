@@ -70,8 +70,7 @@
                                     @foreach ($clients as $client)
                                         <tr>
                                             <th scope="row">{{ $client->id }}</th>
-                                            <td><a
-                                                    href="{{ route('clients.show', $client) }}">{{ $client->name }}</a>
+                                            <td><a href="{{ route('clients.show', $client) }}">{{ $client->name }}</a>
                                             </td>
                                             <td>{{ $client->dni }}</td>
                                             <td>{{ $client->phone }}</td>
@@ -85,6 +84,9 @@
                                                 <a class="jsgrid-button jsgrid-edit-button"
                                                     href="{{ route('clients.edit', $client) }}" title="Editar"><i
                                                         class="far fa-edit"></i></a>
+                                                <a class="jsgrid-button jsgrid-edit-button"
+                                                    href="{{ route('clients.show', $client) }}"><i
+                                                        class="far fa-eye"></i></a>
                                                 <button type="button"
                                                     class="jsgrid-button jsgrid-delete-button unstyled-button"
                                                     onclick="confirmDelete({{ $client->id }})" title="Eliminar"><i

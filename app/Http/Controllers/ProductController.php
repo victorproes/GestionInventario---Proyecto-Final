@@ -8,6 +8,8 @@ use Illuminate\Http\Request;
 use App\Http\Requests\Product\StoreRequest;
 use App\Http\Requests\Product\UpdateRequest;
 use App\Provider;
+use App\PurchaseDetails;
+use App\SaleDetail;
 
 class ProductController extends Controller
 {
@@ -31,7 +33,7 @@ class ProductController extends Controller
             $products = Product::paginate(10);
             return view('admin.product.index', compact('products'));
         } catch (\Exception $e) {
-            
+
             return redirect()->back()->with('error', 'Error al obtener la lista de productos.');
         }
     }
@@ -44,7 +46,7 @@ class ProductController extends Controller
             $providers = Provider::all();
             return view('admin.product.agregarEditar', compact('categories', 'providers'));
         } catch (\Exception $e) {
-            
+
             return redirect()->back()->with('error', 'Error al cargar la vista de crear producto.');
         }
     }
@@ -52,7 +54,7 @@ class ProductController extends Controller
 
     public function store(StoreRequest $request)
     {
-        
+
         try {
             if ($request->hasFile('image')) {
                 $image = $request->file('image');
@@ -61,22 +63,18 @@ class ProductController extends Controller
             } else {
                 $image_name = null; // Asignar null si no se proporciona una imagen
             }
-    
+
             // Crear el producto y asignar el nombre de la imagen
             $product = Product::create($request->all() + ['image' => $image_name]);
-    
+
             // Actualizar el código del producto
             $product->update(['code' => $product->id]);
 
             return redirect()->route('products.index')->with('success', 'Producto creado correctamente.');
         } catch (\Exception $e) {
-            
+
             return redirect()->back()->with('error', 'Error al guardar el producto.');
         }
-       
-        
-
-       
     }
 
 
@@ -94,7 +92,7 @@ class ProductController extends Controller
             $providers = Provider::all();
             return view('admin.product.agregarEditar', compact('product', 'categories', 'providers'));
         } catch (\Exception $e) {
-            
+
             return redirect()->back()->with('error', 'Error al cargar la vista de editar producto.');
         }
     }
@@ -104,26 +102,25 @@ class ProductController extends Controller
     {
         try {
             $image_name = $product->image;
-        if ($request->hasFile('picture')) {
-            $file = $request->file('picture');
-            $image_name = time() . '_' . $file->getClientOriginalName();
-            $file->move(public_path("/image"), $image_name);
-        }
+            if ($request->hasFile('picture')) {
+                $file = $request->file('picture');
+                $image_name = time() . '_' . $file->getClientOriginalName();
+                $file->move(public_path("/image"), $image_name);
+            }
 
 
-        // Crear un array de datos de actualización
-        $data = $request->all();
-        $data['image'] = $image_name;
+            // Crear un array de datos de actualización
+            $data = $request->all();
+            $data['image'] = $image_name;
 
-        // Actualizar el producto con los datos
-        $product->update($data);
+            // Actualizar el producto con los datos
+            $product->update($data);
 
-        return redirect()->route('products.edit', $product->id)->with('success', 'Producto actualizado correctamente.');
+            return redirect()->route('products.edit', $product->id)->with('success', 'Producto actualizado correctamente.');
         } catch (\Exception $e) {
-            
+
             return redirect()->back()->with('error', 'Error al actualizar el producto.');
         }
-        
     }
 
 
@@ -131,29 +128,56 @@ class ProductController extends Controller
     public function destroy(Product $product)
     {
         try {
+            // Verificar si el producto está en alguna venta o compra activa
+            $saleDetails = SaleDetail::where('product_id', $product->id)
+                ->whereHas('sale', function ($query) {
+                    $query->where('status', 'VALID');
+                })
+                ->get();
+            $purchaseDetails = PurchaseDetails::where('product_id', $product->id)
+                ->whereHas('purchase', function ($query) {
+                    $query->where('status', 'VALID');
+                })
+                ->get();
+
+            if ($saleDetails->isNotEmpty() || $purchaseDetails->isNotEmpty()) {
+                return redirect()->route('products.index')->with('error', 'No se puede eliminar el producto porque está asociado a una venta o compra activa.');
+            }
+
             $product->delete();
             return redirect()->route('products.index')->with('success', 'Producto eliminado correctamente.');
         } catch (\Exception $e) {
-            
             return redirect()->back()->with('error', 'Error al eliminar el producto.');
         }
-        
     }
 
     public function change_status(Product $product)
     {
         try {
             if ($product->status == 'ACTIVE') {
+                // Verificar si el producto está en alguna venta o compra activa
+                $saleDetails = SaleDetail::where('product_id', $product->id)
+                    ->whereHas('sale', function ($query) {
+                        $query->where('status', 'VALID');
+                    })
+                    ->get();
+                $purchaseDetails = PurchaseDetails::where('product_id', $product->id)
+                    ->whereHas('purchase', function ($query) {
+                        $query->where('status', 'VALID');
+                    })
+                    ->get();
+
+                if ($saleDetails->isNotEmpty() || $purchaseDetails->isNotEmpty()) {
+                    return redirect()->back()->with('error', 'No se puede desactivar el producto porque está asociado a una venta o compra activa.');
+                }
+
                 $product->update(['status' => 'DEACTIVATED']);
-                return redirect()->back();
             } else {
                 $product->update(['status' => 'ACTIVE']);
-                return redirect()->back();
             }
+            return redirect()->back();
         } catch (\Exception $e) {
-            
             return redirect()->back()->with('error', 'Error al cambiar el estado del producto.');
         }
-        
     }
 }

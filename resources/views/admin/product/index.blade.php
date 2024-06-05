@@ -93,6 +93,7 @@
                                                     'method' => 'DELETE',
                                                     'id' => 'delete-form-' . $product->id,
                                                 ]) !!}
+                                                <a class="jsgrid-button jsgrid-edit-button" href="{{route('products.show',$product)}}"><i class="far fa-eye"></i></a>
                                                 <a class="jsgrid-button jsgrid-edit-button"
                                                     href="{{ route('products.edit', $product) }}" title="Editar"><i
                                                         class="far fa-edit"></i></a>

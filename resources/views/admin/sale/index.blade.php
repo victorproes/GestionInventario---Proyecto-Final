@@ -3,13 +3,13 @@
 @section('title', 'Gestión de ventas')
 
 @section('styles')
-<style type="text/css">
-    .unstyled-button{
-        border: none;
-        padding: 0;
-        background: none;
-    }
-</style>
+    <style type="text/css">
+        .unstyled-button {
+            border: none;
+            padding: 0;
+            background: none;
+        }
+    </style>
 @endsection
 
 @section('options')
@@ -35,15 +35,22 @@
             <div class="col-lg-12 grid-margin stretch-card">
                 <div class="card">
                     <div class="card-body">
+                        <!-- Mensajes de error -->
+                        @if ($errors->any())
+                            <div class="alert alert-danger">
+                                <ul>
+                                    @foreach ($errors->all() as $error)
+                                        <li>{{ $error }}</li>
+                                    @endforeach
+                                </ul>
+                            </div>
+                        @endif
                         <div class="d-flex justify-content-between">
                             <h4 class="card-title">Ventas</h4>
-                            <div class="btn-group">
-                                <a type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                    <i class="fas fa-ellipsis-v"></i>
-                                </a>
-                                <div class="dropdown-menu dropdown-menu-right">
-                                    <a class="dropdown-item" href="{{ route('sales.create') }}">Registrar</a>
-                                    
+                            <div class="col-lg-6">
+                                <div class="text-lg-right mb-4">
+                                    <a href="{{ route('sales.create') }}" class="btn btn-primary"><i
+                                            class="fas fa-plus"></i> Agregar Venta</a>
                                 </div>
                             </div>
                         </div>
@@ -71,33 +78,36 @@
                                 <tbody>
                                     @foreach ($sales as $sale)
                                         <tr>
-                                            <th scope="row"><a href="{{route('sales.show',$sale)}}">{{ $sale->id }}</a></th>
+                                            <th scope="row"><a
+                                                    href="{{ route('sales.show', $sale) }}">{{ $sale->id }}</a></th>
                                             <td>{{ $sale->sale_date }}</td>
                                             <td>{{ $sale->total }}</td>
                                             @if ($sale->status == 'VALID')
-                                            <td>
-                                                <a class="jsgrid-button btn btn-success" href="{{route('change.status.sales',$sale)}}">Activo <i class="fas fa-check"></i></a>
-                                            </td>
-                                                
-                                            @else
-                                            <td>
-                                            <a class="jsgrid-button btn btn-danger" href="{{route('change.status.sales',$sale)}}">Cancelado <i class="fas fa-times"></i></a>
-                                        </td>
-                                            @endif
-                                            
-                                                <td style="width:50px;">
-                                                    
-                                                    {{-- <a class="jsgrid-button jsgrid-edit-button" href="{{ route('sales.edit', $sale) }}" title="Editar"><i class="far fa-edit"></i></a> --}}
-                                                    {{-- <button type="button" class="jsgrid-button jsgrid-delete-button unstyled-button" onclick="confirmDelete({{ $sale->id }})" title="Eliminar"><i class="far fa-trash-alt"></i></button> --}}
-                                                   
-                                                    <a class="jsgrid-button jsgrid-edit-button" href="{{route('sales.pdf',$sale)}}"><i class="far fa-file-pdf"></i></a>
-                                                    <a class="jsgrid-button jsgrid-edit-button" href="{{route('sales.print',$sale)}}"><i class="fas fa-print"></i></a>
-                                                    <a class="jsgrid-button jsgrid-edit-button" href="{{route('sales.show',$sale)}}"><i class="far fa-eye"></i></a>
-                                                   
+                                                <td>
+                                                    <a class="jsgrid-button btn btn-success"
+                                                        href="{{ route('change.status.sales', $sale) }}">Activo <i
+                                                            class="fas fa-check"></i></a>
                                                 </td>
-                                                
-                                                
-                                           
+                                            @else
+                                                <td>
+                                                    <a class="jsgrid-button btn btn-danger"
+                                                        href="{{ route('change.status.sales', $sale) }}">Cancelado <i
+                                                            class="fas fa-times"></i></a>
+                                                </td>
+                                            @endif
+
+                                            <td style="width:50px;">
+
+                                                <a class="jsgrid-button jsgrid-edit-button"
+                                                    href="{{ route('sales.pdf', $sale) }}"><i
+                                                        class="far fa-file-pdf"></i></a>
+                                                <a class="jsgrid-button jsgrid-edit-button"
+                                                    href="{{ route('sales.show', $sale) }}"><i class="far fa-eye"></i></a>
+
+                                            </td>
+
+
+
                                         </tr>
                                     @endforeach
                                 </tbody>
@@ -115,7 +125,7 @@
     {!! Html::script('melody/js/sweetalert2@11') !!}
     <script>
         function confirmDelete(categoryId) {
-            console.log(categoryId  );
+            console.log(categoryId);
             Swal.fire({
                 title: '¿Estás seguro?',
                 text: "¡No podrás revertir esto!",
@@ -133,7 +143,7 @@
         }
 
         setTimeout(function() {
-        $(".alert-success").fadeOut();
-    }, 3000); // Oculta el mensaje de éxito después de 3 segundos
+            $(".alert-success").fadeOut();
+        }, 3000); // Oculta el mensaje de éxito después de 3 segundos
     </script>
 @endsection

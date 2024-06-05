@@ -7,6 +7,8 @@ use Illuminate\Http\Request;
 use App\Http\Requests\Client\StoreRequest;
 use App\Http\Requests\Client\UpdateRequest;
 
+use App\Sale;
+
 class ClientController extends Controller
 {
 
@@ -50,8 +52,10 @@ class ClientController extends Controller
 
     public function show(Client $client)
     {
-        return view('admin.client.show', compact('client'));
+        $sales = Sale::with('saleDetails.product')->where('client_id', $client->id)->get();
+        return view('admin.client.show', compact('client', 'sales'));
     }
+    
 
 
     public function edit(Client $client)

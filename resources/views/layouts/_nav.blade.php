@@ -134,11 +134,6 @@
                                 <a class="nav-link" href="{{ route('business.index') }}">Empresa</a>
                             </li>
                         @endcan
-                        @can('printers.index')
-                            <li class="nav-item">
-                                <a class="nav-link" href="{{ route('printers.index') }}">Impresora</a>
-                            </li>
-                        @endcan
                     </ul>
                 </div>
             </li>

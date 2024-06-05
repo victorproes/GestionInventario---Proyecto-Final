@@ -24,7 +24,7 @@ class SaleController extends Controller
     public function __construct()
     {
         $this->middleware('auth');
-        $this->middleware('can:sales.create')->only(['create','store']);
+        $this->middleware('can:sales.create')->only(['create', 'store']);
         $this->middleware('can:sales.index')->only(['index']);
         $this->middleware('can:sales.show')->only(['show']);
         $this->middleware('can:change.status.sales')->only(['change_status']);
@@ -67,7 +67,7 @@ class SaleController extends Controller
             foreach ($request->product_id as $key => $product) {
                 $results[] = [
                     "product_id" => $request->product_id[$key],
-                    "quantity" => $request->quantity[$key], 
+                    "quantity" => $request->quantity[$key],
                     "price" => $request->price[$key],
                     "discount" => $request->discount[$key]
                 ];
@@ -113,36 +113,15 @@ class SaleController extends Controller
         }
     }
 
-    public function print(Sale $sale)
-    {
-        try {
-            $subtotal = 0;
-            $saleDetails = $sale->saleDetails;
-            foreach ($saleDetails as $saleDetail) {
-                $subtotal += $saleDetail->quantity * $saleDetail->price - ($saleDetail->quantity * $saleDetail->price * $saleDetail->discount / 100);
-            }
-
-            $printer_name = "TM20";
-            $connector = new WindowsPrintConnector($printer_name);
-            $printer = new Printer($connector);
-
-            $printer->text("$9,95\n");
-
-            $printer->cut();
-            $printer->close();
-
-            return redirect()->back()->with('success', 'Venta impresa correctamente.');
-        } catch (\Exception $e) {
-            Log::error('Error printing sale: ' . $e->getMessage());
-            return redirect()->back()->with('error', 'Ocurrió un error al imprimir la venta.');
-        }
-    }
-
     public function change_status(Sale $sale)
     {
         try {
             foreach ($sale->saleDetails as $detail) {
                 $product = Product::find($detail->product_id);
+                if ($product->status != 'ACTIVE') {
+                    return redirect()->back()->with('error', 'No se puede cambiar el estado de la venta porque contiene productos desactivados.');
+                }
+
                 $quantityChange = $detail->quantity;
 
                 if ($sale->status == 'VALID') {

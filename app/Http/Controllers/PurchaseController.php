@@ -132,8 +132,12 @@ class PurchaseController extends Controller
         try {
             foreach ($purchase->purchaseDetails as $detail) {
                 $product = Product::find($detail->product_id);
+                if ($product->status != 'ACTIVE') {
+                    return redirect()->back()->with('error', 'No se puede cambiar el estado de la compra porque contiene productos desactivados.');
+                }
+    
                 $quantityChange = $detail->quantity;
-
+    
                 if ($purchase->status == 'VALID') {
                     if ($product->stock - $quantityChange < 0) {
                         return redirect()->back()->withErrors(['error' => 'No se puede cancelar la compra porque resultará en un stock negativo.']);
@@ -145,11 +149,12 @@ class PurchaseController extends Controller
                     $purchase->update(['status' => 'VALID']);
                 }
             }
-
+    
             return redirect()->back()->with('success', 'Estado de la compra cambiado correctamente.');
         } catch (\Exception $e) {
             Log::error('Error changing purchase status: ' . $e->getMessage());
             return redirect()->back()->with('error', 'Ocurrió un error al cambiar el estado de la compra.');
         }
     }
+    
 }
