@@ -12,6 +12,15 @@ class PermissionsTableSeeder extends Seeder
      */
     public function run()
     {
+
+        //DashBoard
+        Permission::create([
+            'name'=> 'DashBoard',
+            'slug'=> 'home.index',
+            'description'=> 'Ver el panel de control'
+        ]);
+
+
         // Categorías
         Permission::create([
             'name'=> 'Navegar categorías',
