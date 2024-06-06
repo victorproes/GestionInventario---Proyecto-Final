@@ -25,8 +25,6 @@ class CategoryController extends Controller
     {
         
         $categories = Category::paginate(10);
-    
-        
         return view('admin.category.index', compact('categories'));
     }
     
@@ -64,7 +62,7 @@ class CategoryController extends Controller
     {
         try {
             $category->update($request->all());
-            return redirect()->route('categories.edit', $category->id)->with('success', 'Categoría actualizada correctamente.');
+            return redirect()->route('categories.index', $category->id)->with('success', 'Categoría actualizada correctamente.');
         } catch (\Exception $e) {
             return redirect()->back()->withInput()->with('error', 'Ocurrió un error al actualizar la categoría: ' . $e->getMessage());
         }

@@ -24,9 +24,10 @@ class UpdateRequest extends FormRequest
     public function rules()
     {
         return [
+
             'name' => 'string|required|max:255',
-            'dni' => 'string|required|unique:clients,dni,'.$this->route('client')->id.'|max:9|min:9',
-            'cif' => 'string|nullable|unique:clients,cif,'.$this->route('client')->id.'|max:9',
+            'dni' => 'string|required|unique:clients,dni,'.$this->route('client')->id.'|regex:/^\d{8}[A-Z]$/',
+            'cif' => 'string|nullable|unique:clients,cif,'.$this->route('client')->id.'|regex:/^[ABCDEFGHJKLMNPQRSUVW]\d{7}[0-9A-J]$/',
             'address' => 'string|nullable|max:255',
             'phone' => 'string|nullable|unique:clients,phone,'.$this->route('client')->id.'|max:9',
             'email' => 'string|nullable|unique:clients,email,'.$this->route('client')->id.'|max:255|email:rfc,dns'
@@ -43,14 +44,12 @@ class UpdateRequest extends FormRequest
             'dni.required' => 'Este campo es requerido.',
             'dni.string' => 'El valor no es correcto.',
             'dni.unique' => 'Este DNI ya se encuentra registrado.',
-            'dni.min' => 'Se requiere de 9 caracteres.',
-            'dni.max' => 'Solo se permiten 9 caracteres.',
+            'dni.regex' => 'El DNI debe tener 8 dígitos seguidos de una letra y la letra debe ser mayúscula.',
 
             'cif.unique' => 'Este cif ya se encuentra registrado.',
             'cif.string' => 'El valor no es correcto.',
-            'cif.max' => 'Solo se permiten 9 caracteres.',
-            'cif.min' => 'Se requiere de 9 caracteres.',
-
+            'cif.regex' => 'El CIF debe tener una letra inicial, seguida de 7 dígitos y un dígito de control (que puede ser un número o una letra).',
+            
             'address.string' => 'El valor no es correcto.',
             'address.max' => 'Solo se permiten 255 caracteres.',
 

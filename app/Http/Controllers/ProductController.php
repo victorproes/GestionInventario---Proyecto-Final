@@ -56,10 +56,10 @@ class ProductController extends Controller
     {
 
         try {
-            if ($request->hasFile('image')) {
-                $image = $request->file('image');
-                $image_name = time() . '.' . $image->getClientOriginalExtension();
-                $image->move(public_path('images'), $image_name);
+            if ($request->hasFile('picture')) {
+                $file = $request->file('picture');
+                $image_name = time() . '_' . $file->getClientOriginalName();
+                $file->move(public_path("/image"), $image_name);
             } else {
                 $image_name = null; // Asignar null si no se proporciona una imagen
             }

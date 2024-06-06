@@ -13,6 +13,31 @@
         .chart-height {
             height: 200px !important;
         }
+
+        .bg-success-light {
+            background-color: #28a745;
+            color: white;
+        }
+
+        .bg-info-light {
+            background-color: #17a2b8;
+            color: white;
+        }
+
+        .bg-primary-light {
+            background-color: #007bff;
+            color: white;
+        }
+
+        .bg-warning-light {
+            background-color: #ffc107;
+            color: white;
+        }
+
+        .card-height {
+            height: 100%;
+        }
+
     </style>
 @endsection
 
@@ -30,17 +55,15 @@
             </h3>
         </div>
 
+        {{-- Resumen financiero --}}
         <div class="row">
             <div class="col-lg-12 grid-margin stretch-card">
                 <div class="card">
                     <div class="card-body">
-                        <div class="d-flex justify-content-between">
-                            {{-- <h4 class="card-title">Panel administrador</h4> --}}
-                        </div>
                         @foreach ($totales as $total)
                             <div class="row">
-                                <div class="col-lg-6 col-xs-6">
-                                    <div class="card text-white bg-success">
+                                <div class="col-lg-3 col-xs-6">
+                                    <div class="card text-white bg-success-light card-height">
                                         <div class="card-body pb-0">
                                             <div class="float-right">
                                                 <i class="fas fa-cart-arrow-down fa-4x"></i>
@@ -58,8 +81,8 @@
                                     </div>
                                 </div>
 
-                                <div class="col-lg-6 col-xs-6">
-                                    <div class="card text-white bg-info">
+                                <div class="col-lg-3 col-xs-6">
+                                    <div class="card text-white bg-info-light card-height">
                                         <div class="card-body pb-0">
                                             <div class="float-right">
                                                 <i class="fas fa-shopping-cart fa-4x"></i>
@@ -76,6 +99,50 @@
                                         </div>
                                     </div>
                                 </div>
+
+                                <div class="col-lg-3 col-xs-6">
+                                    <div class="card text-white bg-primary-light card-height">
+                                        <div class="card-body pb-0">
+                                            <div class="float-right">
+                                                <i class="fas fa-money-bill-wave fa-4x"></i>
+                                            </div>
+                                            <div class="text-value h4">
+                                                <strong>EUR {{ $total->totalventa - $total->totalcompra }} (MES
+                                                    ACTUAL)</strong>
+                                            </div>
+                                            <div class="h3">Beneficio Bruto</div>
+                                        </div>
+                                        <div class="chart-wrapper mt-3 mx-3" style="height: 35px;">
+                                            <a class="small-box-footer h4" href="#">
+                                                Ver detalles <i class="fa fa-arrow-alt-circle-right"></i>
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="col-lg-3 col-xs-6">
+                                    <div class="card text-white bg-warning-light card-height">
+                                        <div class="card-body pb-0">
+                                            <div class="float-right">
+                                                <i class="fas fa-percentage fa-4x"></i>
+                                            </div>
+                                            <div class="text-value h4">
+                                                @if ($total->totalventa != 0)
+                                                    <strong>{{ round((($total->totalventa - $total->totalcompra) / $total->totalventa) * 100, 2) }}%
+                                                        (MES ACTUAL)</strong>
+                                                @else
+                                                    <strong>0% (MES ACTUAL)</strong>
+                                                @endif
+                                            </div>
+                                            <div class="h3">Margen de Ganancia</div>
+                                        </div>
+                                        <div class="chart-wrapper mt-3 mx-3" style="height: 35px;">
+                                            <a class="small-box-footer h4" href="#">
+                                                Ver detalles <i class="fa fa-arrow-alt-circle-right"></i>
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                         @endforeach
                     </div>
@@ -83,115 +150,74 @@
             </div>
         </div>
 
-
+        {{-- Gráficos de Compras y Ventas Mensuales --}}
         <div class="row">
-            <div class="col-lg-12 grid-margin stretch-card">
+            <div class="col-lg-6 grid-margin stretch-card">
                 <div class="card">
                     <div class="card-body">
-                        <div class="d-flex justify-content-between">
-                            {{-- <h4 class="card-title">Panel administrador</h4> --}}
-                        </div>
-                        <div class="row">
-                            @foreach ($totales as $total)
-                                <div class="col-md-6">
-                                    <div class="card card-chart">
-                                        <div class="card-header">
-                                            <h4 class="text-center">Compras - Meses</h4>
-                                        </div>
-                                        <div class="card-content">
-                                            <div class="ct-chart">
-                                                <canvas id="compras"></canvas>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
+                        <h4 class="text-center">Compras - Meses</h4>
+                        <canvas id="compras"></canvas>
+                    </div>
+                </div>
+            </div>
 
-                                <div class="col-md-6">
-                                    <div class="card card-chart">
-                                        <div class="card-header">
-                                            <h4 class="text-center">Ventas - Meses</h4>
-                                        </div>
-                                        <div class="card-content">
-                                            <div class="ct-chart">
-                                                <canvas id="ventas"></canvas>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            @endforeach
-                        </div>
+            <div class="col-lg-6 grid-margin stretch-card">
+                <div class="card">
+                    <div class="card-body">
+                        <h4 class="text-center">Ventas - Meses</h4>
+                        <canvas id="ventas"></canvas>
                     </div>
                 </div>
             </div>
         </div>
 
-        
+        {{-- Gráfico de Ventas Diarias --}}
         <div class="row">
             <div class="col-lg-12 grid-margin stretch-card">
                 <div class="card">
                     <div class="card-body">
-                        <div class="d-flex justify-content-between">
-                            {{-- <h4 class="card-title">Panel administrador</h4> --}}
-                        </div>
-                        <div class="col-md-12">
-                            <div class="card card-chart">
-                                <div class="card-header">
-                                    <h4 class="text-center">Ventas Diarias</h4>
-                                </div>
-                                <div class="card-content">
-                                    <div class="ct-chart">
-                                        <canvas id="ventas_diarias"></canvas>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+                        <h4 class="text-center">Ventas Diarias</h4>
+                        <canvas id="ventas_diarias"></canvas>
                     </div>
                 </div>
             </div>
         </div>
 
+        {{-- Tabla de Productos Más Vendidos --}}
         <div class="row">
             <div class="col-lg-12 grid-margin stretch-card">
                 <div class="card">
                     <div class="card-body">
-                        <div class="card-header d-flex align-items-center justify-content-between">
-                            <div class="card-heading">
-                                <h4 class="card-title">Productos más vendidos</h4>
-                            </div>
-                        </div>
-                        <div class="card-body scrollbar scroll_dark pt-0" style="max-height: 350px;">
-                            <div class="datatable-wrapper table-responsive">
-                                <table class="table table-borderless table-striped">
-                                    <thead>
+                        <h4 class="card-title">Productos más vendidos</h4>
+                        <div class="table-responsive">
+                            <table class="table table-borderless table-striped">
+                                <thead>
+                                    <tr>
+                                        <th scope="col">ID</th>
+                                        <th>Nombre</th>
+                                        <th>Código</th>
+                                        <th>Stock</th>
+                                        <th>Cantidad vendida</th>
+                                        <th>Ver detalles</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach ($productosvendidos as $productosvendido)
                                         <tr>
-                                            <th scope="col">ID</th>
-                                            <th>Nombre</th>
-                                            <th>Código</th>
-                                            <th>Stock</th>
-                                            <th>Cantidad vendida</th>
-                                            <th>Ver detalles</th>
+                                            <td>{{ $productosvendido->id }}</td>
+                                            <td>{{ $productosvendido->name }}</td>
+                                            <td>{{ $productosvendido->code }}</td>
+                                            <td><strong>{{ $productosvendido->stock }} </strong> Unidades</td>
+                                            <td><strong>{{ $productosvendido->quantity }} </strong> Unidades</td>
+                                            <td>
+                                                <a href="{{ route('products.show', $productosvendido->id) }}">
+                                                    <i class="far fa-eye"> Ver detalles</i>
+                                                </a>
+                                            </td>
                                         </tr>
-                                    </thead>
-                                    <tbody>
-                                        @foreach ($productosvendidos as $productosvendido)
-                                            <tr>
-                                                <td>{{ $productosvendido->id }}</td>
-                                                <td>{{ $productosvendido->name }}</td>
-                                                <td>{{ $productosvendido->code }}</td>
-                                                <td><strong>{{ $productosvendido->stock }} </strong> Unidades
-                                                </td>
-                                                <td><strong>{{ $productosvendido->quantity }} </strong> Unidades
-                                                </td>
-                                                <td>
-                                                    <a href="{{ route('products.show', $productosvendido->id) }}">
-                                                        <i class="far fa-eye"> Ver detalles</i>
-                                                    </a>
-                                                </td>
-                                            </tr>
-                                        @endforeach
-                                    </tbody>
-                                </table>
-                            </div>
+                                    @endforeach
+                                </tbody>
+                            </table>
                         </div>
                     </div>
                 </div>
@@ -204,9 +230,10 @@
     {!! Html::script('melody/js/data-table.js') !!}
     {!! Html::script('melody/js/chart.js') !!}
     {!! Html::script('melody/js/sweetalert2@11') !!}
+  
     <script>
+        // Confirm Delete Function
         function confirmDelete(categoryId) {
-            console.log(categoryId);
             Swal.fire({
                 title: '¿Estás seguro?',
                 text: "¡No podrás revertir esto!",
@@ -222,17 +249,14 @@
             });
         }
 
-        var varCompra = document.getElementById('compras').getContext('2d');
-        var charCompra = new Chart(varCompra, {
+        // Configuración de gráficos
+        var ctxCompras = document.getElementById('compras').getContext('2d');
+        var chartCompras = new Chart(ctxCompras, {
             type: 'line',
             data: {
                 labels: [
                     @foreach ($comprasmes as $reg)
-                        @php
-                            setlocale(LC_TIME, 'es_ES', 'Spanish_Spain', 'Spanish');
-                            $mes_traducido = strftime('%B', strtotime($reg->mes));
-                        @endphp
-                            "{{ $mes_traducido }}",
+                        "{{ strftime('%B', strtotime($reg->mes)) }}",
                     @endforeach
                 ],
                 datasets: [{
@@ -242,32 +266,26 @@
                             {{ $reg->totalmes }},
                         @endforeach
                     ],
-                    borderColor: 'rgba(255,99,132,1)',
+                    borderColor: 'rgba(255, 99, 132, 1)',
                     borderWidth: 3
                 }]
             },
             options: {
                 scales: {
-                    yAxes: [{
-                        ticks: {
-                            beginAtZero: true
-                        }
-                    }]
+                    y: {
+                        beginAtZero: true
+                    }
                 }
             }
         });
 
-        var varVenta = document.getElementById('ventas').getContext('2d');
-        var charVenta = new Chart(varVenta, {
+        var ctxVentas = document.getElementById('ventas').getContext('2d');
+        var chartVentas = new Chart(ctxVentas, {
             type: 'line',
             data: {
                 labels: [
                     @foreach ($ventasmes as $reg)
-                        @php
-                            setlocale(LC_TIME, 'es_ES', 'Spanish_Spain', 'Spanish');
-                            $mes_traducido = strftime('%B', strtotime($reg->mes));
-                        @endphp
-                            "{{ $mes_traducido }}",
+                        "{{ strftime('%B', strtotime($reg->mes)) }}",
                     @endforeach
                 ],
                 datasets: [{
@@ -277,50 +295,50 @@
                             {{ $reg->totalmes }},
                         @endforeach
                     ],
-                    backgroundColor: 'rgba(20,204,20,1)',
-                    borderColor: 'rgba(255,99,132,1)',
+                    backgroundColor: 'rgba(20, 204, 20, 1)',
+                    borderColor: 'rgba(255, 99, 132, 1)',
                     borderWidth: 1
                 }]
             },
             options: {
                 scales: {
-                    yAxes: [{
-                        ticks: {
-                            beginAtZero: true
-                        }
-                    }]
+                    y: {
+                        beginAtZero: true
+                    }
                 }
             }
         });
 
-    var varVentaDiarias = document.getElementById('ventas_diarias').getContext('2d');
-    var charVentaDiarias = new Chart(varVentaDiarias, {
-        type: 'bar',
-        data: {
-            labels: [
-                @foreach ($ventasdia as $ventadia)
-                    "{{ $ventadia->dia }}",
-                @endforeach
-            ],
-            datasets: [{
-                label: 'Ventas diarias',
-                data: [
-                    @foreach ($ventasdia as $reg)
-                        {{ $reg->totaldia }},
+        var ctxVentasDiarias = document.getElementById('ventas_diarias').getContext('2d');
+        var chartVentasDiarias = new Chart(ctxVentasDiarias, {
+            type: 'bar',
+            data: {
+                labels: [
+                    @foreach ($ventasdia as $ventadia)
+                        "{{ $ventadia->dia }}",
                     @endforeach
                 ],
-                backgroundColor: 'rgba(20, 204, 20, 0.2)',
-                borderColor: 'rgba(255, 99, 132, 1)',
-                borderWidth: 1
-            }]
-        },
-        options: {
-            scales: {
-                y: {
-                    beginAtZero: true
+                datasets: [{
+                    label: 'Ventas diarias',
+                    data: [
+                        @foreach ($ventasdia as $reg)
+                            {{ $reg->totaldia }},
+                        @endforeach
+                    ],
+                    backgroundColor: 'rgba(20, 204, 20, 0.2)',
+                    borderColor: 'rgba(255, 99, 132, 1)',
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
                 }
             }
-        }
-    });
+        });
     </script>
+
+
 @endsection

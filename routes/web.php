@@ -68,7 +68,7 @@ Route::resource('users','UserController')->names('users');
 
 Route::resource('roles','RoleController')->names('roles');
 
-Auth::routes();
+Auth::routes(['register' => false]); 
 
 Route::post('/logout', 'LoginController@logout')->name('logout');
 

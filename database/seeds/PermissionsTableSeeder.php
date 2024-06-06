@@ -78,18 +78,6 @@ class PermissionsTableSeeder extends Seeder
             'description'=> 'Eliminar cualquier dato de un cliente del sistema'
         ]);
 
-        // Impresoras
-        Permission::create([
-            'name'=> 'Navegar impresoras',
-            'slug'=> 'printers.index',
-            'description'=> 'Lista y navega por todas las impresoras del sistema'
-        ]);
-        Permission::create([
-            'name'=> 'Edición de impresoras',
-            'slug'=> 'printers.edit',
-            'description'=> 'Editar cualquier dato de una impresora del sistema'
-        ]);
-
         // Productos
         Permission::create([
             'name'=> 'Navegar productos',

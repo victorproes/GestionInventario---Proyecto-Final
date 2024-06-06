@@ -16,6 +16,7 @@ class Product extends Model
         'status',
         'category_id',
         'provider_id',
+        
     ];
 
     public function category(){

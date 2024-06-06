@@ -85,12 +85,13 @@
                                                     href="{{ route('providers.show', $provider) }}">{{ $provider->phone }}</a>
                                             </td>
                                             <td>{{ $provider->description }}</td>
-                                            <td style="width:50px;">
+                                            <td style="width:100px;">
                                                 {!! Form::open([
                                                     'route' => ['providers.destroy', $provider],
                                                     'method' => 'DELETE',
                                                     'id' => 'delete-form-' . $provider->id,
                                                 ]) !!}
+                                                <a class="jsgrid-button jsgrid-edit-button" href="{{route('providers.show',$provider)}}"><i class="far fa-eye"></i></a>
                                                 <a class="jsgrid-button jsgrid-edit-button"
                                                     href="{{ route('providers.edit', $provider) }}" title="Editar"><i
                                                         class="far fa-edit"></i></a>

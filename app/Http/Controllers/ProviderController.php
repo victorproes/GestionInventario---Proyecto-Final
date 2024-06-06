@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Category;
 use App\Provider;
 use Illuminate\Http\Request;
 use App\Http\Requests\Provider\StoreRequest;
@@ -46,11 +47,13 @@ class ProviderController extends Controller
     }
 
    
-    public function show(Provider $provider)
-    {
-        return view('admin.provider.show',compact('provider'));
+    public function show($id)
+{
+    $provider = Provider::findOrFail($id);
+    $categories = Category::all(); // Asegúrate de que esto esté presente
+    return view('admin.provider.show', compact('provider', 'categories'));
+}
 
-    }
 
   
     public function edit(Provider $provider)

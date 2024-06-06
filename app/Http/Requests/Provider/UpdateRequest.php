@@ -26,7 +26,7 @@ class UpdateRequest extends FormRequest
         return [
             'name' => 'required|string|max:255',
             'email' => 'required|email|string|max:255|unique:providers,email,' . $this->route('provider')->id,
-            'cif' => ['required', 'string', 'regex:/^[A-Za-z0-9]{1}[0-9]{7}[A-Za-z0-9]{1}$/', 'unique:providers,cif,' . $this->route('provider')->id],
+            'cif' => ['required', 'string', 'regex:/^[ABCDEFGHJKLMNPQRSUVW]\d{7}[0-9A-J]$/', 'unique:providers,cif,' . $this->route('provider')->id],
             'address' => 'nullable|string|max:255',
             'phone' => ['required', 'regex:/^[679]{1}[0-9]{8}$/', 'unique:providers,phone,' . $this->route('provider')->id],
         ];
@@ -47,14 +47,14 @@ class UpdateRequest extends FormRequest
 
             'cif.required' => 'Este campo es requerido.',
             'cif.string' => 'El valor no es correcto.',
-            'cif.regex' => 'El CIF no tiene un formato válido.',
+            'cif.regex' => 'El CIF debe tener una letra inicial, seguida de 7 dígitos y un dígito de control (que puede ser un número o una letra).',
             'cif.unique' => 'Ya se encuentra registrado.',
 
             'address.max' => 'Solo se permiten 255 caracteres.',
             'address.string' => 'El valor no es correcto.',
 
             'phone.required' => 'Este campo es requerido.',
-            'phone.regex' => 'El teléfono no tiene un formato válido.',
+            'phone.regex' => 'El telefono debe contener 9 numeros',
             'phone.unique' => 'Ya se encuentra registrado.',
 
 
