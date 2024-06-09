@@ -68,7 +68,7 @@
                                     @foreach ($roles as $role)
                                         <tr>
                                             <th scope="row">{{ $role->id }}</th>
-                                            <td><a href="{{ route('roles.show', $role) }}">{{ $role->name }}</a></td>
+                                            <td>{{ $role->name }}</td>
                                             <td>{{ $role->description }}</td>
                                             <td style="width:50px;">
                                             <td style="width:50px;">

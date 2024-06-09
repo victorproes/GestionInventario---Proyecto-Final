@@ -77,11 +77,22 @@
 @section('scripts')
     {!! Html::script('melody/js/data-table.js') !!}
     <script>
-        // Ocultar automáticamente los mensajes de éxito y error después de 3 segundos
         setTimeout(function() {
-            document.querySelectorAll('.alert').forEach(function(alert) {
-                alert.style.display = 'none';
-            });
-        }, 3000);
+            var nameError = document.getElementById('name-error');
+            if (nameError) {
+                nameError.style.display = 'none';
+            }
+
+            var descriptionError = document.getElementById('description-error');
+            if (descriptionError) {
+                descriptionError.style.display = 'none';
+            }
+
+
+
+
+        }, 10000);
     </script>
+
+
 @endsection

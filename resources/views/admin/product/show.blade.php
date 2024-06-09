@@ -17,7 +17,7 @@
             <nav aria-label="breadcrumb">
                 <ol class="breadcrumb">
                     <li class=" breadcrumb-item"><a href="#">Panel administrador</a></li>
-                    <li class=" breadcrumb-item"><a href="#">Proveedores</a></li>
+                    <li class=" breadcrumb-item"><a href="#">Productos</a></li>
                     <li class=" breadcrumb-item active" aria-current="page">{{ $product->name }}</li>
                 </ol>
             </nav>
@@ -35,17 +35,7 @@
                                     <div class="d-flex justify-content-between">
                                     </div>
                                 </div>
-                                {{-- <div class="py-4">
-                                    <div class="list-group">
-                                        <button type="button" class="list-group-item list-group-item-action active">
-                                            Sobre producto
-                                        </button>
-                                        <button type="button"
-                                            class="list-group-item list-group-item-action">Productos</button>
-                                        <button type="button" class="list-group-item list-group-item-action">Registrar
-                                            producto</button>
-                                    </div>
-                                </div> --}}
+                                
 
                                 <div class="py-4">
                                     <p class="clearfix">
@@ -71,28 +61,13 @@
                                         </span>
                                         <span class="float-right text-muted">
                                             {{-- PRODUCTOS POR CATEGORÍA --}}
-                                            <a href="">{{$product->category->name}}</a>
+                                            <a href="{{route('categories.show',$product->category->id)}}">{{$product->category->name}}</a>
                                             
                                         </span>
                                     </p>
-                                    {{-- <p class="clearfix">
-                                        <span class="float-left">
-                                            Facebook
-                                        </span>
-                                        <span class="float-right text-muted">
-                                            <a href="#">David Grey</a>
-                                        </span>
-                                    </p> --}}
-                                    {{-- <p class="clearfix">
-                                        <span class="float-left">
-                                            Twitter
-                                        </span>
-                                        <span class="float-right text-muted">
-                                            <a href="#">@davidgrey</a>
-                                        </span>
-                                    </p> --}}
+                                    
                                 </div>
-                                {{-- <button class="btn btn-primary btn-block">{{$product->status}}</button> --}}
+                                
                                 @if ($product->status=='ACTIVE')
                                 <button class="btn btn-success btn-block">{{$product->status}}</button>
                                 @else
@@ -117,24 +92,9 @@
                                             <strong><i class="fab fa-product-hunt mr-1"></i>Stock</strong>
                                             <p class="text-muted">{{ $product->stock }}</p>
                                             <hr>
-                                            {{-- <strong><i class="fas fa-address-card mr-1"></i>Imagen</strong>
-                                            <p class="text-muted"><img src="{{ asset('image/' . $product->image) }}" alt="profile" class="img-lg mb-3"></p>
-                                            <hr> --}}
+                                            
                                         </div>
-                                        {{-- <div class="form-group col-md-6">
-                                            <strong><i class="fas fa-phone mr-1">Precio de venta</i></strong>
-                                            <p class="text-muted">{{ $product->sell_price }}</p>
-                                            <hr>
-                                            <strong><i class="fas fa-envelope mr-1"></i>Estado</strong>
-                                            <p class="text-muted">{{ $product->status }}</p>
-                                            <hr>
-                                            <strong><i class="fas fa-map-marked-alt mr-1"></i>Categoría</strong>
-                                            <p class="text-muted">{{ $product->category->name }}</p>
-                                            <hr>
-                                            <strong><i class="fas fa-map-marked-alt mr-1"></i>Proveedor</strong>
-                                            <p class="text-muted">{{ $product->provider->name }}</p>
-                                            <hr>
-                                        </div> --}}
+                                       
                                     </div>
                                 </div>
                             </div>

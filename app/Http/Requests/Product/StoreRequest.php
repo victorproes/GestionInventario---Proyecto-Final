@@ -26,10 +26,7 @@ class StoreRequest extends FormRequest
         return [
             'name' => 'string|required|unique:products|max:255',
             'sell_price' => 'required|numeric',
-            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
-
-            
-           
+            'picture' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
         ];
     }
 
@@ -42,9 +39,9 @@ class StoreRequest extends FormRequest
             'name.unique' => 'El nombre del producto ya existe.',
             'sell_price.required' => 'Este campo es requerido.',
             'sell_price.numeric' => 'El valor debe ser un número.',
-            'image.image' => 'El archivo debe ser una imagen.',
-            'image.mimes' => 'La imagen debe ser un archivo de tipo: jpeg, png, jpg, gif.',
-            'image.max' => 'El tamaño de la imagen no debe exceder los 2048 KB.',
+            'picture.image' => 'El archivo debe ser una imagen.',
+            'picture.mimes' => 'La imagen debe ser un archivo de tipo: jpeg, png, jpg, gif.',
+            'picture.max' => 'El tamaño de la imagen no debe exceder los 2048 KB.',
 
           
             

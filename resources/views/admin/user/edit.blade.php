@@ -54,11 +54,7 @@
                             <input type="email" name="email" id="email" value="{{$user->email}}" class="form-control" placeholder="" aria-describedby="helpId">
                         </div>
                         
-                        {{-- <div class="form-group">
-                            <label for="password">Contraseña</label>
-                            <input type="password" name="password" id="password"  class="form-control" placeholder="" aria-describedby="helpId">
-                            <small id="helpId" class="text-muted">Rellenar solo si desea cambiar la contraseña</small>
-                        </div> --}}
+                      
                         
                         @include('admin.user._form')
                         <div class="form-group">

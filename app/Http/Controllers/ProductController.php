@@ -61,13 +61,13 @@ class ProductController extends Controller
                 $image_name = time() . '_' . $file->getClientOriginalName();
                 $file->move(public_path("/image"), $image_name);
             } else {
-                $image_name = null; // Asignar null si no se proporciona una imagen
+                $image_name = null; 
             }
 
-            // Crear el producto y asignar el nombre de la imagen
+           
             $product = Product::create($request->all() + ['image' => $image_name]);
 
-            // Actualizar el código del producto
+           
             $product->update(['code' => $product->id]);
 
             return redirect()->route('products.index')->with('success', 'Producto creado correctamente.');
@@ -109,14 +109,14 @@ class ProductController extends Controller
             }
 
 
-            // Crear un array de datos de actualización
+           
             $data = $request->all();
             $data['image'] = $image_name;
 
-            // Actualizar el producto con los datos
+           
             $product->update($data);
 
-            return redirect()->route('products.edit', $product->id)->with('success', 'Producto actualizado correctamente.');
+            return redirect()->route('products.index', $product->id)->with('success', 'Producto actualizado correctamente.');
         } catch (\Exception $e) {
 
             return redirect()->back()->with('error', 'Error al actualizar el producto.');
@@ -128,7 +128,7 @@ class ProductController extends Controller
     public function destroy(Product $product)
     {
         try {
-            // Verificar si el producto está en alguna venta o compra activa
+            
             $saleDetails = SaleDetail::where('product_id', $product->id)
                 ->whereHas('sale', function ($query) {
                     $query->where('status', 'VALID');
@@ -155,7 +155,7 @@ class ProductController extends Controller
     {
         try {
             if ($product->status == 'ACTIVE') {
-                // Verificar si el producto está en alguna venta o compra activa
+                
                 $saleDetails = SaleDetail::where('product_id', $product->id)
                     ->whereHas('sale', function ($query) {
                         $query->where('status', 'VALID');

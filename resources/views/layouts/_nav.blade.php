@@ -16,12 +16,14 @@
                 </div>
             </div>
         </li>
-        <li class="nav-item">
-            <a class="nav-link" href="{{ route('home') }}">
-                <i class="fa fa-home menu-icon"></i>
-                <span class="menu-title">Dashboard</span>
-            </a>
-        </li>
+        
+            <li class="nav-item">
+                <a class="nav-link" href="{{ route('home') }}">
+                    <i class="fa fa-home menu-icon"></i>
+                    <span class="menu-title">Dashboard</span>
+                </a>
+            </li>
+        
         @can('categories.index')
             <li class="nav-item">
                 <a class="nav-link" href="{{ route('categories.index') }}">

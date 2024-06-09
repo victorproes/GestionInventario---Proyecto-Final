@@ -3,24 +3,15 @@
 namespace App\Http\Requests\Client;
 
 use Illuminate\Foundation\Http\FormRequest;
+use App\Rules\ValidEmailDomain;
 
 class StoreRequest extends FormRequest
 {
-    /**
-     * Determine if the user is authorized to make this request.
-     *
-     * @return bool
-     */
     public function authorize()
     {
         return true;
     }
 
-    /**
-     * Get the validation rules that apply to the request.
-     *
-     * @return array
-     */
     public function rules()
     {
         return [
@@ -29,7 +20,7 @@ class StoreRequest extends FormRequest
             'cif' => ['nullable', 'string', 'unique:clients', 'regex:/^[ABCDEFGHJKLMNPQRSUVW]\d{7}[0-9A-J]$/'],
             'address' => 'string|nullable|max:255',
             'phone' => 'string|nullable|unique:clients|max:9',
-            'email' => 'string|nullable|unique:clients|max:255|email:rfc,dns'
+            'email' => ['string', 'nullable', 'unique:clients', 'max:255', 'email:rfc,dns', new ValidEmailDomain()]
         ];
     }
 
@@ -60,6 +51,7 @@ class StoreRequest extends FormRequest
             'email.string' => 'El valor no es correcto.',
             'email.max' => 'Solo se permiten 255 caracteres.',
             'email.email' => 'No es un correo electrónico.',
+            'email.ValidEmailDomain' => 'El dominio del correo electrónico no es válido. Por favor, use uno de los siguientes dominios: gmail.com, yahoo.com, outlook.com, hotmail.com.',
         ];
     }
 }

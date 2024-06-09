@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests\Provider;
 
+use App\Rules\ValidEmailDomain;
 use Illuminate\Foundation\Http\FormRequest;
 
 class StoreRequest extends FormRequest
@@ -26,7 +27,7 @@ class StoreRequest extends FormRequest
         return [
             
             'name' => 'required|string|max:255',
-            'email' => 'required|email|string|max:255|unique:providers',
+            'email' => ['string', 'required', 'unique:providers', 'max:255', 'email:rfc,dns', new ValidEmailDomain()],
             'cif' => ['required', 'string', 'regex:/^[ABCDEFGHJKLMNPQRSUVW]\d{7}[0-9A-J]$/', 'unique:providers'],
             'address' => 'nullable|string|max:255',
             'phone' => ['required', 'regex:/^[679]{1}[0-9]{8}$/', 'unique:providers'],
@@ -45,6 +46,7 @@ class StoreRequest extends FormRequest
             'email.max' => 'Solo se permiten 255 caracteres.',
             'email.email' => 'No es un correo electrónico.',
             'email.unique' => 'Ya se encuentra registrado.',
+            'email.ValidEmailDomain' => 'El dominio del correo electrónico no es válido. Por favor, use uno de los siguientes dominios: gmail.com, yahoo.com, outlook.com, hotmail.com.',
 
             'cif.required' => 'Este campo es requerido.',
             'cif.string' => 'El valor no es correcto.',

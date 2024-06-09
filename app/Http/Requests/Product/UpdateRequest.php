@@ -31,8 +31,8 @@ class UpdateRequest extends FormRequest
                 'max:255',
                 Rule::unique('products')->ignore($this->product),
             ],
-            'sell_price' => 'required',
-            'image' => 'image|mimes:jpeg,png,jpg,gif|max:2048',
+            'sell_price' => 'required|numeric',
+            'picture' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
         ];
     }
 
@@ -43,8 +43,8 @@ class UpdateRequest extends FormRequest
             'name.string' => 'El valor no es correcto.',
             'name.max' => 'Solo se permiten 255 caracteres.',
             'name.unique' => 'Este nombre ya se encuentra registrado',
-            'image.image' => 'El formato debe ser una imagen',
-            'image.max' => 'El tamaño máximo de la imagen es de 2mb',
+            'picture.image' => 'El formato debe ser una imagen',
+            'picture.max' => 'El tamaño máximo de la imagen es de 2mb',
         ];
     }
 }

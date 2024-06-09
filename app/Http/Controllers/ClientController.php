@@ -69,7 +69,7 @@ class ClientController extends Controller
 
         try {
             $client->update($request->all());
-            return redirect()->route('clients.edit', $client->id)->with('success', 'Cliente actualizado correctamente.');
+            return redirect()->route('clients.index', $client->id)->with('success', 'Cliente actualizado correctamente.');
         } catch (\Exception $e) {
             return redirect()->back()->withInput()->with('error', 'Ocurrió un error al actualizar al cliente: ' . $e->getMessage());
         }

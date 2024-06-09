@@ -155,14 +155,9 @@
                 addressError.style.display = 'none';
             }
 
-        }, 3000);
+        }, 10000);
 
 
-        // Ocultar automáticamente los mensajes de éxito y error después de 3 segundos
-        setTimeout(function() {
-            document.querySelectorAll('.alert').forEach(function(alert) {
-                alert.style.display = 'none';
-            });
-        }, 3000);
+  
     </script>
 @endsection

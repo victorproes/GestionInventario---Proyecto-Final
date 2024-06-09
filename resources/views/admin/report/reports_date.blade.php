@@ -36,7 +36,7 @@
                 <div class="card">
                     <div class="card-body">
                         <div class="d-flex justify-content-between">
-                            {{-- <h4 class="card-title">Reporte por rango de fechas</h4> --}}
+                           
                         </div>
 
                         {!! Form::open(['route' => 'report.results', 'method' => 'POST']) !!}
@@ -104,9 +104,7 @@
                                                 <a class="jsgrid-button jsgrid-edit-button"
                                                     href="{{ route('sales.pdf', $sale) }}"><i
                                                         class="far fa-file-pdf"></i></a>
-                                                <a class="jsgrid-button jsgrid-edit-button"
-                                                    href="{{ route('sales.print', $sale) }}"><i
-                                                        class="fas fa-print"></i></a>
+                                               
                                                 <a class="jsgrid-button jsgrid-edit-button"
                                                     href="{{ route('sales.show', $sale) }}"><i class="far fa-eye"></i></a>
                                             </td>

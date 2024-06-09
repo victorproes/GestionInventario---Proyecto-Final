@@ -47,17 +47,32 @@ class UserController extends Controller
     }
 
     public function store(Request $request)
-    {
-        try {
-            $user = User::create($request->all());
-            $user->update(['password' => Hash::make($request->password)]);
-            $user->roles()->sync($request->get('roles'));
-            return redirect()->route('users.index');
-        } catch (\Exception $e) {
-            Log::error('Error storing user: ' . $e->getMessage());
-            return redirect()->back()->with('error', 'Ocurrió un error al crear el usuario.');
-        }
+{
+    
+    $request->validate([
+        'email' => 'required|email|unique:users,email|ends_with:gmail.com,hotmail.com,yahoo.com,outlook.com',
+       
+        'password' => 'required|min:8',
+    ]);
+
+    try {
+        $user = User::create([
+            'name' => $request->name,
+            'email' => $request->email,
+            'password' => Hash::make($request->password),
+        ]);
+        
+        
+        $user->roles()->sync($request->get('roles'));
+
+        return redirect()->route('users.index')->with('success', 'Usuario creado exitosamente.');
+    } catch (\Exception $e) {
+        Log::error('Error storing user: ' . $e->getMessage());
+        return redirect()->back()->with('error', 'Ocurrió un error al crear el usuario.');
     }
+}
+
+
 
     public function show(User $user)
     {
@@ -93,13 +108,19 @@ class UserController extends Controller
     }
 
     public function destroy(User $user)
-    {
-        try {
-            $user->delete();
-            return back();
-        } catch (\Exception $e) {
-            Log::error('Error deleting user: ' . $e->getMessage());
-            return redirect()->back()->with('error', 'Ocurrió un error al eliminar el usuario.');
-        }
+{
+    try {
+       
+        $user->roles()->detach();
+
+        
+        $user->delete();
+
+        return back()->with('success', 'Usuario eliminado exitosamente.');
+    } catch (\Exception $e) {
+        Log::error('Error deleting user: ' . $e->getMessage());
+        return redirect()->back()->with('error', 'Ocurrió un error al eliminar el usuario.');
     }
+}
+
 }

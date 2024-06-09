@@ -35,6 +35,7 @@
 
                         {!! Form::open(['route' => 'purchases.store', 'method' => 'POST']) !!}
                         @include('admin.purchase._form')
+                        
                         <div class="form-group">
                             <button id="guardar" type="submit" class="btn btn-primary float-right">Registrar</button>
                             <a href="{{ route('purchases.index') }}" class="btn btn-light">Cancelar</a>
@@ -86,34 +87,44 @@
         $("#guardar").hide();
 
         function agregar() {
-            var product_id = $("#product_id").val();
-            var producto = $("#product_id option:selected").text();
-            var quantity = $("#quantity").val();
-            var price = $("#price").val();
-            var iva = $("#iva").val();
+    var product_id = $("#product_id").val();
+    var producto = $("#product_id option:selected").text();
+    var quantity = $("#quantity").val();
+    var price = $("#price").val();
+    var iva = $("#iva").val();
 
-            if (product_id != "" && quantity != "" && quantity > 0 && price != "") {
-                subtotal[cont] = quantity * price;
-                total = total + subtotal[cont];
-                var fila = '<tr class="selected" id="fila' + cont + '">'
-                    + '<td><button type="button" class="btn btn-danger btn-sm" onclick="eliminar(' + cont + ');"><i class="fa fa-times"></i></button></td>'
-                    + '<td><input type="hidden" name="product_id[]" value="' + product_id + '">' + producto + '</td>'
-                    + '<td><input type="hidden" name="price[]" value="' + price + '"><input class="form-control" type="number" value="' + price + '" disabled></td>'
-                    + '<td><input type="hidden" name="quantity[]" value="' + quantity + '"><input class="form-control" type="number" value="' + quantity + '" disabled></td>'
-                    + '<td align="right">s/' + subtotal[cont].toFixed(2) + '</td>'
-                    + '</tr>';
-                cont++;
-                limpiar();
-                totales();
-                evaluar();
-                $('#detalles tbody').append(fila);
-            } else {
-                Swal.fire({
-                    type: 'error',
-                    text: 'Rellene todos los campos del detalle de las compras',
-                });
-            }
-        }
+    if (iva === "") {
+        // Mostrar alerta si el campo de IVA está vacío
+        Swal.fire({
+            type: 'error',
+            text: 'Por favor, ingrese el IVA antes de agregar un producto.',
+        });
+        return; // Detener la ejecución de la función si el IVA está vacío
+    }
+
+    if (product_id != "" && quantity != "" && quantity > 0 && price != "") {
+        subtotal[cont] = quantity * price;
+        total = total + subtotal[cont];
+        var fila = '<tr class="selected" id="fila' + cont + '">'
+            + '<td><button type="button" class="btn btn-danger btn-sm" onclick="eliminar(' + cont + ');"><i class="fa fa-times"></i></button></td>'
+            + '<td><input type="hidden" name="product_id[]" value="' + product_id + '">' + producto + '</td>'
+            + '<td><input type="hidden" name="price[]" value="' + price + '"><input class="form-control" type="number" value="' + price + '" disabled></td>'
+            + '<td><input type="hidden" name="quantity[]" value="' + quantity + '"><input class="form-control" type="number" value="' + quantity + '" disabled></td>'
+            + '<td align="right">s/' + subtotal[cont].toFixed(2) + '</td>'
+            + '</tr>';
+        cont++;
+        limpiar();
+        totales();
+        evaluar();
+        $('#detalles tbody').append(fila);
+    } else {
+        Swal.fire({
+            type: 'error',
+            text: 'Rellene todos los campos del detalle de las compras',
+        });
+    }
+}
+
 
         function limpiar() {
             $("#quantity").val("");

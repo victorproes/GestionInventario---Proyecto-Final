@@ -50,7 +50,7 @@ class ProviderController extends Controller
     public function show($id)
 {
     $provider = Provider::findOrFail($id);
-    $categories = Category::all(); // Asegúrate de que esto esté presente
+    $categories = Category::all(); 
     return view('admin.provider.show', compact('provider', 'categories'));
 }
 
@@ -66,7 +66,7 @@ class ProviderController extends Controller
     {
         try {
             $provider->update($request->all());
-            return redirect()->route('providers.edit', $provider->id)->with('success', 'Proveedor actualizado correctamente.');
+            return redirect()->route('providers.index', $provider->id)->with('success', 'Proveedor actualizado correctamente.');
         } catch (\Exception $e) {
             return redirect()->back()->withInput()->with('error', 'Ocurrió un error al actualizar el proveedor: ' . $e->getMessage());
         }

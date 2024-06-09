@@ -35,30 +35,37 @@
 
                         {!! Form::open(['route' => 'users.store', 'method' => 'POST']) !!}
                         @if (session('success'))
-                        <div class="alert alert-success">
-                            {{ session('success') }}
-                        </div>
-                    @endif
-                    @if (session('error'))
-                        <div class="alert alert-danger">
-                            {{ session('error') }}
-                        </div>
-                    @endif
+                            <div class="alert alert-success">
+                                {{ session('success') }}
+                            </div>
+                        @endif
+                        @if ($errors->any())
+                            <div class="alert alert-danger">
+                                <ul>
+                                    @foreach ($errors->all() as $error)
+                                        <li>{{ $error }}</li>
+                                    @endforeach
+                                </ul>
+                            </div>
+                        @endif
                         <div class="form-group">
                             <label for="name">Nombre</label>
-                            <input type="text" name="name" id="name" class="form-control" placeholder="" aria-describedby="helpId">
+                            <input type="text" name="name" id="name" class="form-control" placeholder=""
+                                aria-describedby="helpId" required>
                         </div>
-                        
+
                         <div class="form-group">
                             <label for="email">Correo electrónico</label>
-                            <input type="email" name="email" id="email" class="form-control" placeholder="" aria-describedby="helpId">
+                            <input type="email" name="email" id="email" class="form-control" placeholder=""
+                                aria-describedby="helpId" required>
                         </div>
-                        
+
                         <div class="form-group">
                             <label for="password">Contraseña</label>
-                            <input type="password" name="password" id="password" class="form-control" placeholder="" aria-describedby="helpId">
+                            <input type="password" name="password" id="password" class="form-control" placeholder=""
+                                aria-describedby="helpId" required>
                         </div>
-                        
+
                         @include('admin.user._form')
                         <div class="form-group">
                             <button id="guardar" type="submit" class="btn btn-primary float-right">Registrar</button>
@@ -74,10 +81,10 @@
 @endsection
 
 @section('scripts')
-    
-{!! Html::script('melody\js\sweetalert2@11.js') !!}
-{!! Html::script('melody\js\avgrund.js') !!}
-   
+
+    {!! Html::script('melody\js\sweetalert2@11.js') !!}
+    {!! Html::script('melody\js\avgrund.js') !!}
+
     <script>
         // Ocultar automáticamente los mensajes de error después de 3 segundos
         setTimeout(function() {
@@ -92,6 +99,5 @@
         }, 3000);
     </script>
 
-   
-@endsection
 
+@endsection

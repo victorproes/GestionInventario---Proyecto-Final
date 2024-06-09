@@ -12,6 +12,7 @@ use App\Provider;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Barryvdh\DomPDF\Facade\Pdf;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 
 class PurchaseController extends Controller
@@ -56,6 +57,9 @@ class PurchaseController extends Controller
 
     public function store(StoreRequest $request)
     {
+       
+        DB::beginTransaction();
+
         try {
             $purchase = Purchase::create($request->all() + [
                 'user_id' => Auth::user()->id,
@@ -65,17 +69,24 @@ class PurchaseController extends Controller
             $results = [];
             foreach ($request->product_id as $key => $product) {
                 $results[] = [
-                    "product_id" => $request->product_id[$key], 
-                    "quantity" => $request->quantity[$key], 
+                    "product_id" => $request->product_id[$key],
+                    "quantity" => $request->quantity[$key],
                     "price" => $request->price[$key],
                 ];
                 event(new ProductPurchased($request->product_id[$key], $request->quantity[$key]));
             }
 
+           
             $purchase->purchaseDetails()->createMany($results);
+
+       
+            DB::commit();
 
             return redirect()->route('purchases.index')->with('success', 'Compra creada correctamente.');
         } catch (\Exception $e) {
+           
+            DB::rollback();
+
             Log::error('Error storing purchase: ' . $e->getMessage());
             return redirect()->back()->withInput()->with('error', 'Ocurrió un error al crear la compra.');
         }
@@ -135,26 +146,25 @@ class PurchaseController extends Controller
                 if ($product->status != 'ACTIVE') {
                     return redirect()->back()->with('error', 'No se puede cambiar el estado de la compra porque contiene productos desactivados.');
                 }
-    
+
                 $quantityChange = $detail->quantity;
-    
+
                 if ($purchase->status == 'VALID') {
                     if ($product->stock - $quantityChange < 0) {
                         return redirect()->back()->withErrors(['error' => 'No se puede cancelar la compra porque resultará en un stock negativo.']);
                     }
-                    event(new ProductPurchased($detail->product_id, $detail->quantity, true)); // Cancelar
+                    event(new ProductPurchased($detail->product_id, $detail->quantity, true)); 
                     $purchase->update(['status' => 'CANCELED']);
                 } else {
-                    event(new ProductPurchased($detail->product_id, $detail->quantity)); // Reactivar
+                    event(new ProductPurchased($detail->product_id, $detail->quantity)); 
                     $purchase->update(['status' => 'VALID']);
                 }
             }
-    
+
             return redirect()->back()->with('success', 'Estado de la compra cambiado correctamente.');
         } catch (\Exception $e) {
             Log::error('Error changing purchase status: ' . $e->getMessage());
             return redirect()->back()->with('error', 'Ocurrió un error al cambiar el estado de la compra.');
         }
     }
-    
 }

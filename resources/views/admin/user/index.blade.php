@@ -68,7 +68,7 @@
                                     @foreach ($users as $user)
                                         <tr>
                                             <th scope="row">{{ $user->id }}</th>
-                                            <td><a href="{{ route('users.show', $user) }}">{{ $user->name }}</a></td>
+                                            <td>{{ $user->name }}</td>
                                             <td>{{ $user->email }}</td>
                                             <td style="width:50px;">
                                                 <td style="width:50px;">

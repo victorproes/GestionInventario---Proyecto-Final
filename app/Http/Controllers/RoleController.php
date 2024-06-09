@@ -88,13 +88,18 @@ class RoleController extends Controller
     }
 
     public function destroy(Role $role)
-    {
-        try {
-            $role->delete();
-            return back();
-        } catch (\Exception $e) {
-            Log::error('Error deleting role: ' . $e->getMessage());
-            return redirect()->back()->with('error', 'Ocurrió un error al eliminar el rol.');
-        }
+{
+    try {
+        
+        $role->users()->detach();
+
+        
+        $role->delete();
+
+        return back()->with('success', 'Rol eliminado exitosamente.');
+    } catch (\Exception $e) {
+        Log::error('Error deleting role: ' . $e->getMessage());
+        return redirect()->back()->with('error', 'Ocurrió un error al eliminar el rol.');
     }
+}
 }

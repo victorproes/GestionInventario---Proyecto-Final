@@ -20,7 +20,6 @@ use Illuminate\Support\Facades\Log;
 
 class SaleController extends Controller
 {
-
     public function __construct()
     {
         $this->middleware('auth');
@@ -125,13 +124,13 @@ class SaleController extends Controller
                 $quantityChange = $detail->quantity;
 
                 if ($sale->status == 'VALID') {
-                    event(new ProductSold($detail->product_id, $detail->quantity, true)); // Cancelar
+                    event(new ProductSold($detail->product_id, $detail->quantity, true)); 
                     $sale->update(['status' => 'CANCELED']);
                 } else {
                     if ($product->stock - $quantityChange < 0) {
                         return redirect()->back()->withErrors(['error' => 'No se puede reactivar la venta porque resultará en un stock negativo.']);
                     }
-                    event(new ProductSold($detail->product_id, $detail->quantity)); // Reactivar
+                    event(new ProductSold($detail->product_id, $detail->quantity)); 
                     $sale->update(['status' => 'VALID']);
                 }
             }

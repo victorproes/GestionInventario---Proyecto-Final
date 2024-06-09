@@ -95,11 +95,9 @@
                                             
                                                 <td style="width:50px;">
                                                     
-                                                    {{-- <a class="jsgrid-button jsgrid-edit-button" href="{{ route('purchases.edit', $purchase) }}" title="Editar"><i class="far fa-edit"></i></a> --}}
-                                                    {{-- <button type="button" class="jsgrid-button jsgrid-delete-button unstyled-button" onclick="confirmDelete({{ $purchase->id }})" title="Eliminar"><i class="far fa-trash-alt"></i></button> --}}
-                                                   
+                                                    
                                                     <a class="jsgrid-button jsgrid-edit-button" href="{{route('purchases.pdf',$purchase)}}"><i class="far fa-file-pdf"></i></a>
-                                                    {{-- <a class="jsgrid-button jsgrid-edit-button" href=""><i class="fas fa-print"></i></a> --}}
+                                                    
                                                     <a class="jsgrid-button jsgrid-edit-button" href="{{route('purchases.show',$purchase)}}"><i class="far fa-eye"></i></a>
                                                    
                                                 </td>

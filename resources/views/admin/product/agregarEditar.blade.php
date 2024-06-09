@@ -43,6 +43,7 @@
                                 </div>
                             @endif
 
+
                             <div class="form-group">
                                 <label for="name">Nombre:</label>
                                 <input type="text" class="form-control" id="name" name="name"
@@ -54,7 +55,7 @@
 
                             <div class="form-group">
                                 <label for="sell_price">Precio de venta:</label>
-                                <input type="number" class="form-control" id="sell_price" name="sell_price"
+                                <input type="number" class="form-control" id="sell_price" name="sell_price" step="0.01"
                                     value="{{ old('sell_price', isset($product) ? $product->sell_price : '') }}" required>
                                 @error('sell_price')
                                     <div id="sell_price-error" class="text-danger">{{ $message }}</div>
@@ -103,6 +104,8 @@
                                 @enderror
                             </div>
 
+
+
                             <button type="submit"
                                 class="btn btn-primary">{{ isset($product) ? 'Editar' : 'Agregar' }}</button>
                             <a class="btn btn-danger" href="{{ route('products.index') }}">Volver</a>
@@ -145,16 +148,10 @@
                 imageError.style.display = 'none';
             }
         }, 3000);
+
+        
     </script>
 
-
-<script>
-    setTimeout(function() {
-        $(".alert-success").fadeOut();
-    }, 3000); // Oculta el mensaje de éxito después de 3 segundos
-
-   
-</script>
 
 
 
