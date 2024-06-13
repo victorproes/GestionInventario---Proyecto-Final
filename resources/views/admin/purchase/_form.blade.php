@@ -30,7 +30,7 @@
 
 <div class="form-group">
     <label for="price">Precio de compra</label>
-    <input type="number" name="price" id="price" class="form-control" aria-describedby="helpId">
+    <input type="number" name="price" id="price" class="form-control" aria-describedby="helpId" step="0.01">
 </div>
 
 

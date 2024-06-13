@@ -106,6 +106,15 @@
                                     <form action="{{ route('products.store') }}" method="POST"
                                         enctype="multipart/form-data">
                                         @csrf
+                                        @if ($errors->any())
+                                        <div class="alert alert-danger">
+                                            <ul>
+                                                @foreach ($errors->all() as $error)
+                                                    <li>{{ $error }}</li>
+                                                @endforeach
+                                            </ul>
+                                        </div>
+                                    @endif
                                         <input type="hidden" name="provider_id" value="{{ $provider->id }}">
                                         <div class="form-group">
                                             <label for="name">Nombre del producto</label>
@@ -117,7 +126,7 @@
                                         </div>
                                         <div class="form-group">
                                             <label for="sell_price">Precio</label>
-                                            <input type="number" name="sell_price" class="form-control" required>
+                                            <input type="number" name="sell_price" class="form-control" required step="0.01">
                                         </div>
                                         <div class="form-group">
                                             <label for="category_id">Categoría:</label>
@@ -157,8 +166,10 @@
             </div>
         </div>
     </div>
+   
 @endsection
 @section('scripts')
+<script src="melody/js/sweetalert2@11.js"></script>
     {!! Html::script('melody/js/data-table.js') !!}
     {!! Html::script('melody/js/profile-demo.js') !!}
     <script>
@@ -170,4 +181,5 @@
             document.getElementById(sectionId).style.display = 'block';
         }
     </script>
+    
 @endsection

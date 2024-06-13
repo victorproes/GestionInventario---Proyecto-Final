@@ -17,6 +17,7 @@ class BusinessController extends Controller
         $this->middleware('can:business.edit')->only(['update']);
     }
 
+
     public function index()
     {
         try {
@@ -28,6 +29,7 @@ class BusinessController extends Controller
         }
     }
 
+ 
     public function update(UpdateRequest $request, Business $business)
     {
         try {

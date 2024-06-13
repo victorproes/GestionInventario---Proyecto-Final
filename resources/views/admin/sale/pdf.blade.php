@@ -79,7 +79,7 @@
         <div class="sale-info">
             <h3>Información de la Venta</h3>
             <p><strong>Número Venta:</strong> {{ $sale->id }}</p>
-            <p><strong>Fecha:</strong> {{ $sale->purchase_date }}</p>
+            <p><strong>Fecha:</strong> {{ $sale->sale_date }}</p>
         </div>
 
         <table>

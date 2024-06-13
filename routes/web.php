@@ -45,7 +45,7 @@ Route::resource('sales','SaleController')->names('sales')->except([
 
 Route::get('purchases/pdf/{purchase}','PurchaseController@pdf')->name('purchases.pdf');
 Route::get('sales/pdf/{sale}','SaleController@pdf')->name('sales.pdf');
-Route::get('sales/print/{sale}','SaleController@print')->name('sales.print');
+
 
 Route::resource('business', 'BusinessController')->names('business')->only([
     'index','update'
@@ -53,7 +53,7 @@ Route::resource('business', 'BusinessController')->names('business')->only([
 
 
 
-Route::get('purchases/upload/{purchase}','PurchaseController@Upload')->name('upload.purchases');
+
 
 
 Route::get('change_status/products/{product}', 'ProductController@change_status')->name('change.status.products');

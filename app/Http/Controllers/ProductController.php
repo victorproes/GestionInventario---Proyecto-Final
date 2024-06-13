@@ -30,7 +30,7 @@ class ProductController extends Controller
     public function index()
     {
         try {
-            $products = Product::paginate(10);
+            $products = Product::get();
             return view('admin.product.index', compact('products'));
         } catch (\Exception $e) {
 

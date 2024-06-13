@@ -163,16 +163,11 @@ class PermissionsTableSeeder extends Seeder
         ]);
         Permission::create([
             'name'=> 'Cambio de estado de compras',
-            'slug'=> 'change_status.purchases',
+            'slug'=> 'change.status.purchases',
             'description'=> 'Cambiar el estado de una compra del sistema'
         ]);
 
-        Permission::create([
-            'name'=> 'Subir archivo de compra',
-            'slug'=> 'upload.purchases',
-            'description'=> 'Puede subir comprobantes de una compra'
-        ]);
-
+      
         // Ventas
         Permission::create([
             'name'=> 'Navegar ventas',
@@ -194,11 +189,7 @@ class PermissionsTableSeeder extends Seeder
             'slug'=> 'sales.pdf',
             'description'=> 'Generar un PDF de una venta del sistema'
         ]);
-        Permission::create([
-            'name'=> 'Imprimir ventas',
-            'slug'=> 'sales.print',
-            'description'=> 'Imprimir una venta del sistema'
-        ]);
+     
         Permission::create([
             'name'=> 'Cambio de estado de ventas',
             'slug'=> 'change.status.sales',
@@ -228,11 +219,7 @@ class PermissionsTableSeeder extends Seeder
             'slug'=> 'users.index',
             'description'=> 'Lista y navega por todos los usuarios del sistema'
         ]);
-        Permission::create([
-            'name'=> 'Ver detalles de los usuarios',
-            'slug'=> 'users.show',
-            'description'=> 'Ver en detalle cada usuario del sistema'
-        ]);
+      
         Permission::create([
             'name'=> 'Edición de usuarios',
             'slug'=> 'users.edit',
@@ -255,11 +242,7 @@ class PermissionsTableSeeder extends Seeder
             'slug'=> 'roles.index',
             'description'=> 'Lista y navega por todos los roles del sistema'
         ]);
-        Permission::create([
-            'name'=> 'Ver detalles de los roles',
-            'slug'=> 'roles.show',
-            'description'=> 'Ver en detalle cada rol del sistema'
-        ]);
+     
         Permission::create([
             'name'=> 'Edición de roles',
             'slug'=> 'roles.edit',

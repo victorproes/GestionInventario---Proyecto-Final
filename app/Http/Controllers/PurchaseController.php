@@ -127,16 +127,7 @@ class PurchaseController extends Controller
     }
 
 
-    public function upload(Request $request, Purchase $purchase)
-    {
-        try {
-            $purchase->update($request->all());
-            return redirect()->route('purchases.index')->with('success', 'Compra actualizada correctamente.');
-        } catch (\Exception $e) {
-            Log::error('Error uploading purchase: ' . $e->getMessage());
-            return redirect()->back()->withInput()->with('error', 'Ocurrió un error al actualizar la compra.');
-        }
-    }
+  
 
     public function change_status(Purchase $purchase)
     {
